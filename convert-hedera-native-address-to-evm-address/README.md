@@ -47,6 +47,6 @@ This should produce the following output:
 ## References
 
 - [HIP-583](https://hips.hedera.com/hip/hip-583)
-- [How to convert a Hedera native address into an EVM address?](https://stackoverflow.com/q/76182970/194982)
+- [How to convert a Hedera native address into an EVM address? (Stackoverflow)](https://stackoverflow.com/q/76182970/194982)
 - [`EntityIdHelper.fromString`](https://github.com/hashgraph/hedera-sdk-js/blob/d761dc49/src/EntityIdHelper.js#L195-L212)
 - [`EntityIdHelper.toSolidityAddress`](https://github.com/hashgraph/hedera-sdk-js/blob/d761dc49/src/EntityIdHelper.js#L249-L259)
