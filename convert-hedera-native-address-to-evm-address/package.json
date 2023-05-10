@@ -1,0 +1,6 @@
+{
+    "type": "module",
+    "dependencies": {
+        "@hashgraph/sdk": "2.24.2"
+    }
+}
