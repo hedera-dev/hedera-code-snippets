@@ -15,7 +15,7 @@ for those pre-compield functions.
 
 `PrngSystemContract` is one of these system contracts,
 and is used to generate pseudo random numbers.
-However this is not considered to be cryptographically sercure.
+However this is not considered to be cryptographically secure.
 
 ## Code
 
