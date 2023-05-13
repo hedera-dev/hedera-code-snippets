@@ -1,7 +1,14 @@
 #!/bin/bash
 
+function echo_hex_and_dec () {
+    HEXADECIMAL=$( echo "${1}" | tr '[:lower:]' '[:upper:]' )
+    echo ${HEXADECIMAL}
+    DECIMAL=$( echo "ibase=16; ${HEXADECIMAL:2}" | bc )
+    echo ${DECIMAL}
+}
+
 echo "net_version"
-curl -s -X POST \
+CHAINID=$( curl -s -X POST \
     -H 'Content-Type: application/json' \
     -d '{
             "jsonrpc":"2.0",
@@ -10,10 +17,11 @@ curl -s -X POST \
             "params":[]
         }' \
     http://localhost:7546 \
-    | jq
+    | jq -r ".result" )
+echo_hex_and_dec ${CHAINID}
 
 echo "eth_blockNumber"
-BLOCK_HEXADECIMAL=$( curl -s -X POST \
+BLOCK=$( curl -s -X POST \
     -H 'Content-Type: application/json' \
     -d '{
             "jsonrpc":"2.0",
@@ -22,14 +30,12 @@ BLOCK_HEXADECIMAL=$( curl -s -X POST \
             "params":[]
         }' \
     http://localhost:7546 \
-    | jq -r ".result" | tr '[:lower:]' '[:upper:]' )
-echo ${BLOCK_HEXADECIMAL}
-BLOCK=$( echo "ibase=16; ${BLOCK_HEXADECIMAL:2}" | bc )
-echo ${BLOCK}
+    | jq -r ".result" )
+echo_hex_and_dec ${BLOCK}
 
 echo "eth_getBalance"
 ADDRESS_EVM=0x07ffAaDFe3a598b91ee08C88e5924be3EfF35796
-BALANCE_HEXADECIMAL=$( curl -s -X POST \
+BALANCE=$( curl -s -X POST \
     -H 'Content-Type: application/json' \
     -d '{
             "jsonrpc":"2.0",
@@ -38,7 +44,5 @@ BALANCE_HEXADECIMAL=$( curl -s -X POST \
             "params":["'"${ADDRESS_EVM}"'", "latest"]
         }' \
     http://localhost:7546 \
-    | jq -r ".result" | tr '[:lower:]' '[:upper:]' )
-echo ${BALANCE_HEXADECIMAL}
-BALANCE=$( echo "ibase=16; ${BALANCE_HEXADECIMAL:2}" | bc )
-echo ${BALANCE}
+    | jq -r ".result" )
+echo_hex_and_dec ${BALANCE}

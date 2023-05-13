@@ -74,7 +74,8 @@ and we pipe it through `tr` and `bc` to convert to its equivalent decimal value.
 RPC for `eth_getBalance`
 
 This gets the balance of the account,
-whose address is specified in `ADDRESS_EVM`
+whose address is specified in `ADDRESS_EVM` -
+update this value to that of your own wallet.
 The `result` property in the reponse is in hexadecimal,
 and again, we pipe it through `tr` and `bc` to convert to its equivalent decimal value.
 
