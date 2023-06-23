@@ -1,4 +1,4 @@
-#Create new account on Hedera Testnet with PYthon 
+#Create new account on Hedera Testnet with Python 
 
 This script allows devs to easly create a new account on Hedera Testnet using Python Wrapper for Hedera SDK.
 
