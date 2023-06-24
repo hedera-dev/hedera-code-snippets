@@ -2,6 +2,8 @@
 
 This code snippet aims to show users how to easily deploy a new smart contract on Hedera network with Hedera Python SDK. Using a set of standard transactions, developers can easly and safely interact with Hedera network.
 
+This code snippet was contributed by [astrid-net](https://github.com/astrid-net).
+
 ## Code
 
 The architecture of the code is quite similar to the other snippets: We use the Operator class as it's useful as gateway to Hedera networks, and through Operator we are able to access a set of transactions and interactions with Hedera Network. In this case, we start from the Bytecode of a smart Contract. Once we write a new one using Solidity, we compile it. The output of this process is the Bytecode of the smart contract. 

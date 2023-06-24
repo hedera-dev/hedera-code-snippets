@@ -2,6 +2,8 @@
 
 This script allows devs to easly create a new account on Hedera Testnet using the Hedera Python SDK.
 
+This code snippet was contributed by [astrid-net](https://github.com/astrid-net).
+
 ## Code
 
 After importing the hedera package into our file, a function is created to automatically create the new account. Hedera Python SDK has some standard functions that allow us to interact with the Hedera network. As always, we use the operator class which is our gateway to this chain. Please make sure you create your own operator account on Hedera Portal.
