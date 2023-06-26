@@ -26,7 +26,6 @@ def createFile():
     client = Client.forTestnet()
     client.setOperator(OPERATOR_ID, OPERATOR_KEY)
 
-
     #Create a string that contains data to store on Hedera Testnet
     f_content = 'This is my test for new file'
 
@@ -44,5 +43,5 @@ def createFile():
     fileId = receipt.fileId
     query = FileContentsQuery()
 
-    #Retreive file content through its IDusing the Query class
+    #Retreive file content through its ID using the Query class
     fileContent = query.setFileId(fileId).execute(client).toStringUtf8()

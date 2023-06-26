@@ -41,7 +41,7 @@ def generate_account():
     #Get transaction ID of previous transaction
     tx_id = receipt.transactionId.toString()
 
-    #Get keysof newly created account from Transaction receipt
+    #Get keys of newly created account from Transaction receipt
     account_id = receipt.accountId.toString()
     account_key = receipt.key.toString()
 

@@ -6,7 +6,9 @@ This code snippet was contributed by [astrid-net](https://github.com/astrid-net)
 
 ## Code
 
-The architecture of the code is quite similar to the other snippets: We call the Operator class as it's useful as gateway to Hedera networks, and through Operator we are able to access a set of transactions and interactions with Hedera networks. There's an built-in function that allows devs to directly access the Account balances. This returns a dictonary, that allow us to obtain HBAR and other tokens balances of the given Account ID.
+After importing the `hedera` package into our file, the `fetchAccountBalance` function uses it retrieve the balance of an account. Hedera Python SDK has some standard functions that allow us to interact with the Hedera network. We use the operator keys to initialise `client`, and use that to sign and submit transactionsto the Hedera network. You can use any Hedera account as an operator; if you do not yet have one, you can create your own operator account on Hedera Portal.
+
+We use `AccountBalanceQuery()` to do this, and read the `hbars` property from the response to obtain its balance.
 
 ## References
 

@@ -6,11 +6,14 @@ This code snippet was contributed by [astrid-net](https://github.com/astrid-net)
 
 ## Code
 
-The architecture of the code is quite similar to the other snippets: We use the Operator class as it's useful as gateway to Hedera networks, and through Operator we are able to access a set of transactions and interactions with Hedera Network. In this case, we start from the Bytecode of a smart Contract. Once we write a new one using Solidity, we compile it. The output of this process is the Bytecode of the smart contract. 
+After importing the `hedera` package into our file, the `deployContract` function uses it to deploy a smart contract. Hedera Python SDK has some standard functions that allow us to interact with the Hedera network. We use the operator keys to initialise `client`, and use that to sign and submit transactionsto the Hedera network. You can use any Hedera account as an operator; if you do not yet have one, you can create your own operator account on Hedera Portal.
 
-The Bytecode is safely stored on the chain using a specific transaction that allows devs to store small-sized files on Hedera networks, obtaining from the Transaction receipt the FileID. 
-
-This FileID help us to retreive the Bytecode from the network, ensuring it has been successfully stored. Once we make sure everything is correct, we create the transaction required to deploy the smart contract using the operator keys, the ByteCode of the file (inputting the FileID) and parameters to keep control of the gas fees paid.
+We take the compiled bytecode output from `solc` (the Solidity compiler),
+and save that in `byteCode`.
+This bytecode is is then stored as a file using `FileCreateTransaction`,
+and we obtain the `fileId` from the transaction receipt.
+Subsequently the file is deployed as a smart contract using `ContractCreateTransaction`,
+by specifying the same `fileId`.
 
 ## References
 
