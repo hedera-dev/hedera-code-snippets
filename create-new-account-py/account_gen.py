@@ -1,6 +1,4 @@
 #Import module and classes
-from hedera import PrivateKey
-from hedera import FileId, FileContentsQuery
 import os
 from hedera import (
     Client,
@@ -8,9 +6,6 @@ from hedera import (
     PrivateKey,
     AccountCreateTransaction,
     AccountId,
-    AccountBalanceQuery,
-    FileCreateTransaction,
-    FileContentsQuery,
     Client
     )
 

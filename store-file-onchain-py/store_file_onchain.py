@@ -1,23 +1,18 @@
 #Import library and modules
-from hedera import PrivateKey
-from hedera import FileId, FileContentsQuery
 import os
 from hedera import (
     Client,
     Hbar,
     PrivateKey,
-    AccountCreateTransaction,
     AccountId,
-    AccountBalanceQuery,
     FileCreateTransaction,
     FileContentsQuery,
     Client
     )
 
-#create function
+#create function to store and retrieve file
 def createFile():
     
-
     #Get operator AccountID and PvtKey
     OPERATOR_ID = AccountId.fromString('Get yours on Hedera Portal')
     OPERATOR_KEY = PrivateKey.fromString('Get yours on Hedera Portal')

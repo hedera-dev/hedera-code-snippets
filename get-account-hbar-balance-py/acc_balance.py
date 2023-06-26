@@ -1,16 +1,10 @@
 #Import clients 
-from hedera import PrivateKey
-from hedera import FileId, FileContentsQuery
 import os
 from hedera import (
     Client,
-    Hbar,
     PrivateKey,
-    AccountCreateTransaction,
     AccountId,
     AccountBalanceQuery,
-    FileCreateTransaction,
-    FileContentsQuery,
     Client
     )
 
@@ -22,7 +16,7 @@ def fetchAccountBalance(accountId):
     OPERATOR_KEY = PrivateKey.fromString('Get yours on Hedera Portal')
 
     #Call Client class and use Operator credentials
-    client = Client.forTestnet()S
+    client = Client.forTestnet()
     client.setOperator(OPERATOR_ID, OPERATOR_KEY)
 
     #Enter the ID of the account whose balance the user wants to know about
