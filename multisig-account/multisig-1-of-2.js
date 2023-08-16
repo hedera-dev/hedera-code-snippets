@@ -12,13 +12,17 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// ensure required environment variables are available
 if (!process.env.OPERATOR_ID || !process.env.OPERATOR_KEY) {
     throw new Error('Must set OPERATOR_ID and OPERATOR_KEY in .env');
 }
+
+// configure client using environment variables
 const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 
+//entrypoint for execution of this example (called at the bottom of the file)
 async function main() {
     console.log('Operator Account ID:', operatorId.toString());
 
@@ -36,7 +40,7 @@ async function main() {
     // use one of the keys to generate an account alias
     const accountAlias = edKey.publicKey.toAccountId(0, 0);
 
-    // create new account from acount alias using a `TransferTransaction`
+    // create new account from account alias using a `TransferTransaction`
     const createAccountTx = new TransferTransaction()
         .addHbarTransfer(operatorId, new Hbar(-70))
         .addHbarTransfer(accountAlias, new Hbar(70))
@@ -58,9 +62,9 @@ async function main() {
         .setAccountId(multisigAccountId)
         .setKey(multisigKeyList)
         .freezeWith(client);
-	const makeMultisigTxSignedByOneKey = await makeMultisigTx.sign(edKey);
+    const makeMultisigTxSignedByOneKey = await makeMultisigTx.sign(edKey);
     const makeMultisigTxSignedByAllKeys = await makeMultisigTxSignedByOneKey.sign(ecKey);
-	const makeMultisigTxSubmitted = await makeMultisigTxSignedByAllKeys.execute(client);
+    const makeMultisigTxSubmitted = await makeMultisigTxSignedByAllKeys.execute(client);
     const makeMultisigTxRecord = await makeMultisigTxSubmitted.getRecord(client);
     console.log('makeMultisigTxRecord', transactionHashscanUrl(makeMultisigTxRecord));
 
@@ -101,9 +105,9 @@ async function main() {
     process.exit(0);
 }
 
- function transactionHashscanUrl(txRecord) {
+function transactionHashscanUrl(txRecord) {
     const txId = txRecord.transactionId.toString();
     return `https://hashscan.io/testnet/transaction/${txId}`;
- }
+}
 
 main();
