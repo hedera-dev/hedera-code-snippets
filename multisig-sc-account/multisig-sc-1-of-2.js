@@ -61,17 +61,19 @@ async function main() {
     const scId = scDeployTxRecord.receipt.contractId;
     console.log('scId', scId.toString());
 
-    // Generate a new EdDSA key
-    const edKey = PrivateKey.generateED25519();
+    // // Generate a new EdDSA key
+    // const ecKey = PrivateKey.generateED25519();
+    // Generate a new ECDSA key
+    const ecKey = PrivateKey.generateECDSA();
 
     // Create a `KeyList` that represents a 1 of 2 multisig threshold
-    // where one of the keys is the smart contract ID, and the other is the EdDSA key
-    const multisigPublicKeys = [scId, edKey.publicKey];
+    // where one of the keys is the smart contract ID, and the other is the ECDSA key
+    const multisigPublicKeys = [scId, ecKey.publicKey];
     const multisigKeyList = new KeyList(multisigPublicKeys, 1);
     console.log('multisigKeyList', multisigKeyList.toString());
 
-    // Use the EdDSA keys to generate an account alias
-    const accountAlias = edKey.publicKey.toAccountId(0, 0);
+    // Use the ECDSA key to generate an account alias
+    const accountAlias = ecKey.publicKey.toAccountId(0, 0);
 
     // Create new account from account alias using a `TransferTransaction`
     const createAccountTx = new TransferTransaction()
@@ -87,7 +89,12 @@ async function main() {
         .execute(client);
     const multisigAccountId =
         createAccountTxRecordWithChildren?.children[0]?.receipt?.accountId;
+    const multisigAccountEvmAddress =
+        createAccountTxRecordWithChildren?.children[0]?.evmAddress;
     console.log('multisigAccountId', multisigAccountId.toString());
+    console.log('multisigAccountEvmAddress', multisigAccountEvmAddress.toString());
+    console.log('toLongZeroEvmAddress(multisigAccountId)', toLongZeroEvmAddress(multisigAccountId));
+    console.log('multisigAccountId.toSolidityAddress()', multisigAccountId.toSolidityAddress());
 
     // Update account to use this `KeyList`, via an `AccountUpdateTransaction`.
     // This replaces the single signature with a the 1 of 2 multisig
@@ -95,7 +102,7 @@ async function main() {
         .setAccountId(multisigAccountId)
         .setKey(multisigKeyList)
         .freezeWith(client);
-    const makeMultisigTxSignedByAllKeys = await makeMultisigTx.sign(edKey);
+    const makeMultisigTxSignedByAllKeys = await makeMultisigTx.sign(ecKey);
     const makeMultisigTxSubmitted = await makeMultisigTxSignedByAllKeys.execute(client);
     const makeMultisigTxRecord = await makeMultisigTxSubmitted.getRecord(client);
     console.log('makeMultisigTxRecord', transactionHashscanUrl(makeMultisigTxRecord));
@@ -105,7 +112,7 @@ async function main() {
         .setAccountId(multisigAccountId)
         .setTokenIds([htsFtId])
         .freezeWith(client);
-    const associateFtTxSigned = await associateFtTx.sign(edKey);
+    const associateFtTxSigned = await associateFtTx.sign(ecKey);
     const associateFtTxSubmitted = await associateFtTxSigned.execute(client);
     const associateFtTxRecord = await associateFtTxSubmitted.getRecord(client);
     console.log('associateFtTxRecord', transactionHashscanUrl(associateFtTxRecord));
@@ -120,13 +127,13 @@ async function main() {
     const transferFtFromOperatorTxRecord = await transferFtFromOperatorTxSubmitted.getRecord(client);
     console.log('transferFtFromOperatorTxRecord', transactionHashscanUrl(transferFtFromOperatorTxRecord));
 
-    // Sign a `TransferTransaction` using the EdDSA key only,
+    // Sign a `TransferTransaction` using the ECDSA key only,
     // then attempt to execute it
     const transfer1of2EcTx = new TransferTransaction()
         .addTokenTransfer(htsFtId, operatorId, -12)
         .addTokenTransfer(htsFtId, multisigAccountId, 12)
         .freezeWith(client);
-    const transfer1of2EcTxSigned = await transfer1of2EcTx.sign(edKey);
+    const transfer1of2EcTxSigned = await transfer1of2EcTx.sign(ecKey);
     const transfer1of2EcTxSubmitted = await transfer1of2EcTxSigned.execute(client);
     const transfer1of2EcTxRecord = await transfer1of2EcTxSubmitted.getRecord(client);
     console.log('transfer1of2EcTxRecord', transactionHashscanUrl(transfer1of2EcTxRecord));
@@ -151,7 +158,7 @@ async function main() {
             'performPrecompileOperation',
             new ContractFunctionParameters()
                 .addAddress(toLongZeroEvmAddress(htsFtId))
-                .addAddress(toLongZeroEvmAddress(multisigAccountId))
+                .addAddress(multisigAccountEvmAddress.toString())
                 .addAddress(toLongZeroEvmAddress(operatorId))
                 .addInt64(23),
         )
