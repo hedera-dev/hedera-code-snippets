@@ -23,6 +23,7 @@ const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 async function main() {
     console.log('Operator Account ID', operatorId.toString());
 
+    // create fungible token
     const ftCreateTx = await new TokenCreateTransaction()
         .setTokenName("snippetft")
         .setTokenSymbol("SNIPPET")
@@ -37,15 +38,18 @@ async function main() {
     const ftCreateTxRecord = await ftCreateTxSubmitted.getRecord(client);
     console.log('ftCreateTxRecord', transactionHashscanUrl(ftCreateTxRecord));
 
+    // identify assigned token id from transaction receipt
     const ftId = ftCreateTxRecord.receipt.tokenId;
     console.log('ftId', ftId.toString());
 
+    // query the operators token balance
     const balanceQuery = new AccountBalanceQuery()
         .setAccountId(operatorId);
     const balanceQueryResponse = await balanceQuery.execute(client);
     const operatorFtBalance = balanceQueryResponse.tokens.get(ftId);
     console.log('operatorFtBalance', operatorFtBalance);
 
+    // force exit
     process.exit(0);
 }
 

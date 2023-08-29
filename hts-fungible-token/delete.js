@@ -22,6 +22,8 @@ const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 
 // entry point for execution of this example (called at the bottom of the file)
 async function main() {
+
+    // delete the fungible token
     const ftDeleteTx = await new TokenDeleteTransaction()
         .setTokenId(process.env.HTS_FT_ID)
         .freezeWith(client);
@@ -30,6 +32,7 @@ async function main() {
     const ftDeleteTxRecord = await ftDeleteTxSubmitted.getRecord(client);
     console.log('ftDeleteTxRecord', transactionHashscanUrl(ftDeleteTxRecord));
 
+    // force exit
     process.exit(0);
 }
 
