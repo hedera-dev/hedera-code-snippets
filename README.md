@@ -17,6 +17,7 @@ See: [sscce.org](http://sscce.org/)
 - Deploy Smart Contract on Hedera Testnet using Python: [`deploy-smart-contract-py`](./deploy-smart-contract-py/)
 - Read Account HBAR balance using Python: [`get-account-hbar-balance-py`](./get-account-hbar-balance-py/)
 - Store file on Hedera Network using Python: [`store-file-onchain-py`](./store-file-onchain-py/)
+- Multisig Account: [`multisig-account`](./multisig-account/)
 
 ## Contributing
 
