@@ -18,6 +18,7 @@ See: [sscce.org](http://sscce.org/)
 - Read Account HBAR balance using Python: [`get-account-hbar-balance-py`](./get-account-hbar-balance-py/)
 - Store file on Hedera Network using Python: [`store-file-onchain-py`](./store-file-onchain-py/)
 - Multisig Account: [`multisig-account`](./multisig-account/)
+- Create, mint, and delete HTS fungible tokens: [`hts-fungible-token`](./hts-fungible-token/)
 
 ## Contributing
 
