@@ -30,14 +30,16 @@ if (!process.env.OPERATOR_ID ||
 // Configure client using environment variables
 const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-const htsFtId = TokenId.fromString(process.env.HTS_FT_ID);
 const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+
+// Configure fungible token using environment variables 
+const htsFtId = TokenId.fromString(process.env.HTS_FT_ID);
 
 // Entry point for execution of this example (called at the bottom of the file)
 async function main() {
     console.log('Operator Account ID', operatorId.toString());
 
-    // Upload EVM bytecode to HFS, then deploy it to HSCS
+    // Upload EVM bytecode to Hedera File Service (HFS)
     const evmBytecode = await fs.readFile(
         './account_sol_Account.bin', { encoding: 'utf8' });
     const fileCreateTx = new FileCreateTransaction()
@@ -49,6 +51,7 @@ async function main() {
     const fileId = fileCreateTxRecord.receipt.fileId;
     console.log('fileId', fileId.toString());
 
+    // Deploy Uploaded Contract (File) to Hedera Smart Contract Service (HSCS)
     const scDeployTx = new ContractCreateTransaction()
         .setBytecodeFileId(fileId)
         .setGas(400_000)
@@ -61,7 +64,7 @@ async function main() {
     const scId = scDeployTxRecord.receipt.contractId;
     console.log('scId', scId.toString());
 
-    // // Generate a new EdDSA key
+    // Generate a new EdDSA key
     // const ecKey = PrivateKey.generateED25519();
     // Generate a new ECDSA key
     const ecKey = PrivateKey.generateECDSA();
@@ -87,6 +90,8 @@ async function main() {
         .setTransactionId(createAccountTxRecord.transactionId)
         .setIncludeChildren(true)
         .execute(client);
+    
+    // Extract Account ID / EVM Address from Submitted Transaction 
     const multisigAccountId =
         createAccountTxRecordWithChildren?.children[0]?.receipt?.accountId;
     const multisigAccountEvmAddress =
@@ -117,7 +122,7 @@ async function main() {
     const associateFtTxRecord = await associateFtTxSubmitted.getRecord(client);
     console.log('associateFtTxRecord', transactionHashscanUrl(associateFtTxRecord));
 
-    // Transfer an initial balance of HTS FT tokens to the mutlisig account
+    // Transfer an initial balance of HTS FT tokens to the multisig account
     const transferFtFromOperatorTx = new TransferTransaction()
         .addTokenTransfer(htsFtId, operatorId, -100)
         .addTokenTransfer(htsFtId, multisigAccountId, 100)

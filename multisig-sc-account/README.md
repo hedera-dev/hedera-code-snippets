@@ -62,13 +62,13 @@ Then a new account is created and funded with HBAR using the same process as the
 This new account can now be operated using either the EdDSA key or the smart contract.
 
 Before the new account can do anything with the HTS fungible token,
-it will need ot be associated with that token,
-and then hold some baance of those tokens, so we do so.
+it will need to be associated with that token,
+and then hold some balance of those tokens, so we do so.
 
 Next we invoke a HTS fungible token transfer directly from the account,
 signing the transaction with the EdDSA key.
 
-Next we invoke the smartc contract, which indirectly invokes
+Next we invoke the smart contract, which indirectly invokes
 the HTS fungible token transfer through its precompile (system contract).
 Notably, this transaction is **unsigned** using any keys.
 Instead, the smart contract is acting on behalf of the account itself,
