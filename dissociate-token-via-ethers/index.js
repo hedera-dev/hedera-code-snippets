@@ -4,7 +4,7 @@ import { TokenId,} from '@hashgraph/sdk';
 
 /* Dissociate an account from the provided HTS token id by 
   treating HTS tokens as if they were ERC20/ERC721 tokens. 
-  This allows us to call the dissociate functino directly on the HTS token.
+  This allows us to call the dissociate function directly on the HTS token.
 */
 async function dissociateToken() {
   // set up your ethers provider
