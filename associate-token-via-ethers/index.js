@@ -1,9 +1,9 @@
 import ethers from 'ethers';
 import { TokenId,} from '@hashgraph/sdk';
 
-/* Associate an account with the provided HTS token id by 
+/* Associate an account with the provided HTS token ID by 
   treating HTS tokens as if they were ERC20/ERC721 tokens. 
-  This allows us to call the associate functino directly on the HTS token.
+  This allows us to call the associate function directly on the HTS token.
 */
 async function associateToken() {
   // set up your ethers provider
