@@ -7,7 +7,7 @@ Using the mirror nodes is the recommended way to check if an account is currentl
 
 ## Code
 
-* First rename the .env.example file to .env.
+* First rename the `.env.example` file to `.env`.
 * Next update the values of `OPERATOR_ID` and `OPERATOR_KEY`. 
   
   >The  `OPERATOR_ID` will be the ED25519 account id and the `OPERATOR_KEY` will be the DER Encoded Private Key. You can grab this information from https://portal.hedera.com/login
