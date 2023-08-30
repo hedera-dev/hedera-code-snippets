@@ -10,6 +10,13 @@ You are able to treat HTS tokens as if they were ERC20/ERC721 tokens. This allow
 ## Code
 The file `index.js` provides a code snippet to associate an account with a Hedera native token via ethers.js. 
 
+- Use `tokenSolidityAddress` to obtain the EVM address of the HTS token
+- Use `['function associate()']` as a hardcoded ABI that exposes (a subset of the) known interface of all HTS tokens
+- Use `ethers.Contract` to initialise an instance using the address and ABI
+- Invoke `associate` on the token instance, which you can interact with like a "standard" EVM smart contract from this point onward
+
+
+
 ### How to use
 Add this code snippet into an already existing project that establishes a connection to an evm wallet (i.e. MetaMask). The wallet user will need to sign the transaction and if successful, their account is associated with the token.
 
