@@ -22,11 +22,11 @@ client.setDefaultMaxTransactionFee(new Hbar(100));
 // Check if the account is associated with the Hedera native token
 // Returns true if the account has a balance that is 0 or greater for the given token ID, otherwise false
 async function isAssociated() {
-  const testnetUrl = 'https://testnet.mirrornode.hedera.com/';
+  const testnetUrl = 'https://testnet.mirrornode.hedera.com';
   const hederaAccountId = '0.0.572377';
   const hederaTokenId = '0.0.572609';
   // fetch the account info
-  const accountInfo = await fetch(`${testnetUrl}api/v1/accounts/${hederaAccountId}`, { method: "GET" });
+  const accountInfo = await fetch(`${testnetUrl}/api/v1/accounts/${hederaAccountId}`, { method: "GET" });
   // convert the response to json
   const accountInfoJson = await accountInfo.json();
   // grab the associated tokens list from the json
