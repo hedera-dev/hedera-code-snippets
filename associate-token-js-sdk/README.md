@@ -5,7 +5,7 @@ On Hedera, HTS allows you to create fungible tokens which behave similarly to ER
 
 ## Code
 
-* First rename the .env.example file to .env.
+* First rename the `.env.example` file to `.env`.
 * Next update the values of `OPERATOR_ID` and `OPERATOR_KEY`. 
 
   >The  `OPERATOR_ID` will be the ED25519 account id and the `OPERATOR_KEY` will be the DER Encoded Private Key. You can grab this information from https://portal.hedera.com/login
