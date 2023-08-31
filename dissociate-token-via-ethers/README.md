@@ -19,7 +19,7 @@ The file `index.js` provides the code necessary to switch to the Hedera Testnet 
 Use `switchToHederaNetwork()` to change to the Hedera Testnet network to complete the association call.
 - Use `wallet_switchEthereumChain` to switch to the Hedera Testnet network.
 - Use `wallet_addEthereumChain`to add the Hedera Testnet network to MetaMask in the event it has not been previously added.
-  - Use `chainId`0x128 in hexadecimal numbers to add the Hedera Testnet Network
+  - Use `chainId` 0x128 in hexadecimal numbers to add the Hedera Testnet Network
   - Use `nativeCurrency` to describe the native currency of the chain
     - Use `name` HBAR
     - Use `symbol` HBAR
