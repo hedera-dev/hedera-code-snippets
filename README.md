@@ -6,7 +6,12 @@ See: [sscce.org](http://sscce.org/)
 
 ## Snippets
 
+- Associate token using JS SDK: [`associate-token-js-sdk`](./associate-token-js-sdk/)
+- Associate token using ethers.js & Metamask: [`associate-token-via-ethers`](./associate-token-via-ethers/)
+- Check if an account is associated to a token using JS SDK: [`is-associated-js`](./is-associated-js/)
 - Convert address from Hedera-native (`S.R.N`) format to EVM (`0x...`) format: [`convert-hedera-native-address-to-evm-address`](./convert-hedera-native-address-to-evm-address/)
+- Dissociate token using JS SDK: [`dissociate-token-js-sdk`](./dissociate-token-js-sdk/)
+- Dissociate token using ethers.js & MetaMask: [`dissociate-via-ethers`](./dissociate-token-via-ethers/)
 - Obtain "block" number based on timestamp: [`obtain-block-number-from-timestamp`](./obtain-block-number-from-timestamp/)
 - Smallest units of HBAR in smart contracts: [`smallest-hbar-units-smart-contracts`](./smallest-hbar-units-smart-contracts/)
 - Random number generation using system contract: [`prng-system-contract`](./prng-system-contract/)
