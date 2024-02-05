@@ -5,7 +5,11 @@ import {
     type Address,
     type SendTransactionErrorType,
 } from 'viem';
-import { hederaTestnet } from 'viem/chains';
+import {
+    hedera as hederaMainnet,
+    hederaTestnet,
+    hederaPreviewnet,
+} from 'viem/chains';
 
 // NOTE this declare is done to avoid the TS type check error
 // for `window.ethereum` not being present.
@@ -55,6 +59,22 @@ async function main() {
 
     const transferAmountInput = document.querySelector('#transferAmount') as HTMLInputElement;
     const transferToInput = document.querySelector('#transferTo') as HTMLInputElement;
+
+    document.querySelector('#addChainMainnet')?.addEventListener('click', async function () {
+        web3Client.addChain({
+            chain: hederaMainnet,
+        });
+    });
+    document.querySelector('#addChainTestnet')?.addEventListener('click', async function () {
+        web3Client.addChain({
+            chain: hederaTestnet,
+        });
+    });
+    document.querySelector('#addChainPreviewnet')?.addEventListener('click', async function () {
+        web3Client.addChain({
+            chain: hederaPreviewnet,
+        });
+    });
 
     document.querySelector('#transferExecute')?.addEventListener('click', async function() {
         // NOTE allow up to 10 significant figures (out of 18) when converting to `uint256`
