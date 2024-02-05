@@ -7,6 +7,6 @@
         "serve": "npx http-server@14.1.1 ./dist -c-1 -p 8111"
     },
     "dependencies": {
-        "viem": "2.7.1"
+        "viem": "2.7.3"
     }
 }
