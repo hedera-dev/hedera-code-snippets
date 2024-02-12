@@ -15,6 +15,7 @@ See: [sscce.org](http://sscce.org/)
 - DApp built with Viem connected to Hedera Testnet: [`dapp-viem`](./dapp-viem/)
 - Dissociate token using JS SDK: [`dissociate-token-js-sdk`](./dissociate-token-js-sdk/)
 - Dissociate token using ethers.js & MetaMask: [`dissociate-via-ethers`](./dissociate-token-via-ethers/)
+- Get Account Info Using HEDERA Portal API Keys: [`get-account-info-using-portal-api-keys`](./get-account-info-using-portal-api-keys/)
 - Obtain "block" number based on timestamp: [`obtain-block-number-from-timestamp`](./obtain-block-number-from-timestamp/)
 - Smallest units of HBAR in smart contracts: [`smallest-hbar-units-smart-contracts`](./smallest-hbar-units-smart-contracts/)
 - Random number generation using system contract: [`prng-system-contract`](./prng-system-contract/)
@@ -39,7 +40,7 @@ See: [sscce.org](http://sscce.org/)
 - Something that you think is worth explaining. For example:
   - Solutions/ workarounds for commonly encountered issues.
   - Demonstrate nuances/ differences between Hedera and other DLTs.
-  - Doing something *tricky*.
+  - Doing something _tricky_.
 
 ### How to contribute
 
