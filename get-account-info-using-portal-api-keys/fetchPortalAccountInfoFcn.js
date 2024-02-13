@@ -1,7 +1,4 @@
-async function getInfoSingleAccountFcn(publicKey, portalApiKey) {
-	const url = `https:/portal.hedera.com/api/account/${publicKey}`;
-	const authorizationHeader = `Bearer ${portalApiKey}`;
-
+async function fetchPortalAccountInfoFcn(url, authorizationHeader) {
 	let accountInfo;
 	try {
 		const response = await fetch(url, {
@@ -22,4 +19,4 @@ async function getInfoSingleAccountFcn(publicKey, portalApiKey) {
 
 	return accountInfo;
 }
-export default getInfoSingleAccountFcn;
+export default fetchPortalAccountInfoFcn;

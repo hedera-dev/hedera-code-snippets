@@ -1,5 +1,4 @@
-import getInfoSingleAccountFcn from "./getInfoSingleAccount.js";
-import getInfoAllAccountsFcn from "./getInfoAllAccounts.js";
+import fetchPortalAccountInfoFcn from "./fetchPortalAccountInfoFcn.js";
 import { Client, AccountBalanceQuery } from "@hashgraph/sdk";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -7,8 +6,10 @@ require("dotenv").config();
 
 const portalApiKey = process.env.HEDERA_PORTAL_API_KEY;
 const operatorPublicKey = process.env.OPERATOR_PBKEY;
+const authorizationHeader = `Bearer ${portalApiKey}`;
 
 async function main() {
+	let url;
 	let network;
 	let accountId;
 	let privateKey;
@@ -18,7 +19,9 @@ async function main() {
 	// ====================================
 	// 1. GET SINGLE ACCOUNT INFO BY PUBLIC KEY
 	// ====================================
-	const singleAccountInfo = await getInfoSingleAccountFcn(operatorPublicKey, portalApiKey);
+	url = `https:/portal.hedera.com/api/account/${operatorPublicKey}`;
+
+	const singleAccountInfo = await fetchPortalAccountInfoFcn(url, authorizationHeader);
 	// console.log(JSON.stringify(singleAccountInfo, null, 2));
 
 	// 1.1 Get the account ID and private key for the account
@@ -37,7 +40,9 @@ async function main() {
 	// ====================================
 	// 2. GET ALL ACCOUNTS INFO
 	// ====================================
-	const allAccountsInfo = await getInfoAllAccountsFcn(portalApiKey);
+	url = `https:/portal.hedera.com/api/account`;
+
+	const allAccountsInfo = await fetchPortalAccountInfoFcn(url, authorizationHeader);
 	// console.log(JSON.stringify(allAccountsInfo, null, 2));
 
 	// 2.1 Get the account ID and private key for the 4th account in the array
