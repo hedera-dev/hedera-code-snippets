@@ -26,8 +26,8 @@ Then visit `http://127.0.0.1:8111/` in your browser.
 
 The `dapp.ts` file in this directory contains all the application code.
 
-A network config for `hederaTestnetChain` is defined manually here.
-Change the value of `rpcUrls.default.http` to match what you have configured in Metamask.
+A network config for `hederaTestnet` is imported from `viem/chains`.
+The RPC URL is obtained from what you've configured in Metamask.
 
 Subsequently `web3Client` obejct is created,
 which is a combination of `viem.walletClient` and `viem.publicClient`.

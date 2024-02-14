@@ -1,4 +1,5 @@
-import { createPublicClient, http, defineChain } from 'viem';
+import { createPublicClient, http } from 'viem';
+import { hederaTestnet } from 'viem/chains';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -15,41 +16,22 @@ if (!rpcUrlHederatestnet || !rpcUrlHederatestnet.startsWith('http')) {
     'Missing or invalid value in RPC_URL env var',
   );
 }
-
-const hederaTestnetChain = defineChain({
-    id: 0x128,
-    name: 'HederaTestnet',
-    nativeCurrency: {
-        symbol: 'ℏ',
-        name: 'HBAR',
-        decimals:  18,
-    },
-    rpcUrls: {
-        default: {
-            http: [rpcUrlHederatestnet],
-        },
-    },
-    blockExplorers: {
-        default: {
-            name: 'Hashscan',
-            url: 'https://hashscan.io/testnet'
-        },
-    },
-    contracts: {},
-});
  
 const web3Client = createPublicClient({
-  chain: hederaTestnetChain,
-  transport: http(),
+  chain: hederaTestnet,
+  transport: http(rpcUrlHederatestnet, {
+    batch: false,
+  }),
 });
 
 async function main() {
-    const blockNumber = await web3Client.getBlockNumber();
+    const [blockNumber, balance] = await Promise.all([
+        web3Client.getBlockNumber(),
+        web3Client.getBalance({
+            address: '0x7394111093687e9710b7a7aeba3ba0f417c54474',
+        }),
+    ]);
     console.log('block number', blockNumber);
-
-    const balance = await web3Client.getBalance({
-        address: '0x7394111093687e9710b7a7aeba3ba0f417c54474',
-    });
     console.log('balance', balance);
 }
 
