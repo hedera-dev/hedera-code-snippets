@@ -1,15 +1,8 @@
 {
 	"name": "get-account-info-using-portal-api-keys",
 	"version": "1.0.0",
-	"description": "(Explain context for code snippet)",
 	"main": "main.js",
 	"type": "module",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
 	"dependencies": {
 		"@hashgraph/sdk": "^2.42.0-beta.1",
 		"dotenv": "^16.4.3"
