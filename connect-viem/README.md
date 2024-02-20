@@ -1,4 +1,4 @@
-# Connect to Hedera Testnet via EthersJs
+# Connect to Hedera Testnet via Viem
 
 This code snippets demonstrates how to connect to Hedera Testnet
 using Viem.
