@@ -1,0 +1,11 @@
+{
+    "type": "module",
+    "scripts": {
+        "build": "npm run static && npm run bundle",
+        "static": "cp -r ./static/* ./dist/",
+        "bundle": "bun build ./src/dapp.ts --outdir ./dist --format 'esm' --target 'browser'",
+        "serve": "npx http-server@14.1.1 ./dist -c-1 -p 8111"
+    },
+    "dependencies": {
+    }
+}
