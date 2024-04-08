@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build-vue && npm run static && npm run serve",
+    "static": "cp -r ./static/* ./dist/",
+    "build-bun": "bun build --outdir ./dist --format 'esm' --target 'browser' ./src/dapp.ts",
+    "build-vue": "vue-cli-service build --dest ./dist --formats 'umd' --target lib --name dapp src/dapp.ts",
+    "serve": "npx http-server@14.1.1 ./dist -c-1 -p 8222"
+  },
+  "dependencies": {
+    "@hashgraph/sdk": "2.43.0"
+  },
+  "devDependencies": {
+    "@vue/cli": "5.0.8",
+    "@vue/cli-plugin-babel": "5.0.8",
+    "@vue/cli-service": "5.0.8"
+  }
+}
