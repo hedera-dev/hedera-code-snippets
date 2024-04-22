@@ -29,6 +29,7 @@ See: [sscce.org](http://sscce.org/)
 - Multisig Account: [`multisig-account`](./multisig-account/)
 - Multisig Smart Contract Account: [`multisig-sc-account`](./multisig-sc-account/)
 - Create, mint, and delete HTS fungible tokens: [`hts-fungible-token`](./hts-fungible-token/)
+- HCS Topic Permissioned Write: [`hcs-topic-permissioned-write`](./hcs-topic-permissioned-write/)
 
 ## Contributing
 
