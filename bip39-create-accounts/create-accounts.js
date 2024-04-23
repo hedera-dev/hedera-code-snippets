@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import readline from 'node:readline/promises';
+
 import {
     Client,
     AccountId,
     PrivateKey,
     TransferTransaction,
+    TransactionRecordQuery,
 } from '@hashgraph/sdk';
 import {
     HDNode as ethersHdNode,
@@ -15,14 +20,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // TODO read these in as CLI params
-const NUM_ACCOUNTS = 6;
+const NUM_ACCOUNTS = 2;
 const AMOUNT_PER_ACCOUNT = 10;
 const HD_PATH = "m/44'/60'/0'/0";
-const BIP39_SEED_PHRASE = 'brand inmate syrup license harvest duck resource gloom chaos memory twist cake';
 
 // Ensure required environment variables are available
-if (!process.env.OPERATOR_ID || !process.env.OPERATOR_KEY) {
-    throw new Error('Must set OPERATOR_ID and OPERATOR_KEY in .env');
+if (!process.env.OPERATOR_ID ||
+    !process.env.OPERATOR_KEY ||
+    !process.env.SEED_PHRASE) {
+    throw new Error('Must set OPERATOR_ID, OPERATOR_KEY, and SEED_PHRASE in .env');
 }
 
 // Configure client using environment variables
@@ -33,7 +39,7 @@ const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 async function main() {
     console.log('Operator Account ID:', operatorId.toString());
 
-    const hdNodeRoot = ethersHdNode.fromMnemonic(BIP39_SEED_PHRASE);
+    const hdNodeRoot = ethersHdNode.fromMnemonic(process.env.SEED_PHRASE);
     const accounts = new Array(NUM_ACCOUNTS);
     for (let idx = 0; idx < NUM_ACCOUNTS; idx++) {
         const accountHdPath = `${HD_PATH}/${idx}`;
@@ -48,11 +54,7 @@ async function main() {
             publicKey: privateKeyX.publicKey.toStringDer(),
             privateKey: privateKeyX.toStringDer(),
         };
-        console.log(`EVM account #${idx} generated.`);
-        console.log(`#${idx}     HD path: ${accountHdPath}`);
-        console.log(`#${idx} Private key: ${privateKeyX.toStringDer()}`);
-        console.log(`#${idx}  Public key: ${privateKeyX.publicKey.toStringDer()}`);
-        console.log(`#${idx} EVM address: ${privateKeyX.publicKey.toEvmAddress()}`);
+        console.log(`#${idx} ${accountHdPath} EVM address: ${privateKeyX.publicKey.toEvmAddress()}`);
     }
 
     let multiTransferTx = new TransferTransaction()
@@ -64,32 +66,33 @@ async function main() {
     multiTransferTx = multiTransferTx.freezeWith(client);
     const transferTxSign = await multiTransferTx.sign(operatorKey);
     const transferTxResponse = await transferTxSign.execute(client);
-    const transferTxId = transferTxSign.transactionId.toString();
-    console.log('Transfer transaction ID', transferTxId);
+	const transferTxRecord = await transferTxResponse.getRecord(client);
+    const transferTxId = transferTxRecord.transactionId;
+    console.log('Transfer transaction ID', transferTxId.toString());
 
-    /*const transferTxReceipt =*/ await transferTxResponse.getReceipt(client);
-    await new Promise((resolve) => { setTimeout(resolve, 6_000) });
+    const transferRecordQy = await new TransactionRecordQuery()
+        .setTransactionId(transferTxId)
+        .setIncludeChildren(true)
+        .execute(client);
 
-    // Perform a mirror node query to foind the accounts that have received the transfer
-    // Ref: https://testnet.mirrornode.hedera.com/api/v1/docs/#/transactions/getTransactionById
-    // https://testnet.mirrornode.hedera.com/api/v1/transactions/0.0.1521-1713705558-648902461?nonce=0
-    const [idPart1, idPart2] = transferTxId.split('@');
-    const transferTxIdMnFormat = `${idPart1}-${idPart2.replace('.', '-')}`;
-    const transferTxMnResponse = await fetch(
-        `https://testnet.mirrornode.hedera.com/api/v1/transactions/${transferTxIdMnFormat}?nonce=0`);
-    const transferTxMnResult = await transferTxMnResponse.json();
-    const transfers = transferTxMnResult.transactions[0].transfers;
-    const recipientTransfers = transfers.filter((transfer) => {
+    const recipientExpectedAmountStr = BigInt(AMOUNT_PER_ACCOUNT * 100_000_000).toString();
+    const recipientTransfers = transferRecordQy.transfers.filter((transfer) => {
         // Expect other receipts as well, who receive the fees paid for processing the transaction
-        return (transfer.amount === AMOUNT_PER_ACCOUNT * 100_000_000);
+        return (transfer.amount.toTinybars().toString() === recipientExpectedAmountStr);
     });
     if (recipientTransfers.length !== NUM_ACCOUNTS) {
         console.warn('WARNING: Unexpected number of recipient transfers:', recipientTransfers.length);
         console.log(transfers);
     }
     for (let idx = 0; idx < NUM_ACCOUNTS; ++idx) {
-        accounts[idx].id = recipientTransfers[idx].account;
+        accounts[idx].id = recipientTransfers[idx].accountId;
     }
+
+    const startEnvFileFormat = [
+        `OPERATOR_ID="${process.env.OPERATOR_ID}"`,
+        `OPERATOR_KEY="${process.env.OPERATOR_KEY}"`,
+        `SEED_PHRASE="${process.env.SEED_PHRASE}"`,
+    ].join('\n');
     const accountsEnvFileFormat = accounts.map((account, idx) => {
         return [
             `ACCOUNT_${idx}_ID="${account.id}"`,
@@ -97,10 +100,43 @@ async function main() {
             `ACCOUNT_${idx}_KEY="${account.privateKey}"`,
             `ACCOUNT_${idx}_PUBLICKEY="${account.publicKey}"`,
         ].join('\n');
-    });
-    console.log(accountsEnvFileFormat.join('\n'));
+    }).join('\n');
+    const fullEnvFileFormat = [
+        startEnvFileFormat,
+        accountsEnvFileFormat,
+        `# Generated by hedera-dev/hedera-code-snippets/bip39-create-accounts on ${(new Date()).toISOString()}\n`,
+    ].join('\n\n');
+
+    const envFilePath = path.resolve(process.cwd(), '.env');
+    const envFileExists = await fileExists(envFilePath);
+    let allowedOverwrite = false;
+    console.log(`File at "${envFilePath}" exists: ${envFileExists}`);
+    if (envFileExists) {
+        const prompt = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+        const inputStr = await prompt.question(`Do you wish to overwrite "${envFilePath}"? (y/N): `);
+        allowedOverwrite = (inputStr.charAt(0).toUpperCase() === 'Y');
+        prompt.close();
+    }
+    if (!envFileExists || allowedOverwrite) {
+        console.log(`OK, .env file written to "${envFilePath}".`);
+        fs.writeFile(envFilePath, fullEnvFileFormat);
+    } else {
+        console.log('OK, .env file contents output to console instead.');
+        console.log(fullEnvFileFormat);
+    }
 
     await client.close();
 }
 
 main();
+
+async function fileExists(filePath) {
+    try {
+        return (await fs.stat(filePath)).isFile();
+    } catch (e) {
+        return false;
+    }
+}
