@@ -9,11 +9,13 @@ import {
     PrivateKey,
     EvmAddress,
     PublicKey,
+    TopicMessageSubmitTransaction,
 } from '@hashgraph/sdk';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
+const HCS_TOPIC_ID = process.env.HCS_TOPIC_ID || '0.0.3745107';
 const eciesOptions = {
     // use all default options
     curveName: 'secp256k1',
@@ -70,11 +72,21 @@ async function main() {
         to: readerAccount.id.toString(),
         msg: hcsReadEncryptedMsgTxt,
     });
-    // TODO submit to HCS topic
+    const msgSubmitTx = await new TopicMessageSubmitTransaction({
+        topicId: HCS_TOPIC_ID,
+        message: hcsWriteMsgRaw,
+    }).execute(client);
+    const msgSubmitTxReceipt = await msgSubmitTx.getReceipt(client);
+    console.log(`${HCS_TOPIC_ID}#${msgSubmitTxReceipt.topicSequenceNumber.toString()}`);
 
     // readerAccount reads encryptedMsg from HCS topic --> hcsReadMsg
-    // TODO read from HCS topic
-    const hcsReadMsgRaw = '' + hcsWriteMsgRaw;
+    // Ref: https://testnet.mirrornode.hedera.com/api/v1/docs/#/topics/getTopicMessageByIdAndSequenceNumber
+    const mnApiUrl = `https://testnet.mirrornode.hedera.com/api/v1/topics/${HCS_TOPIC_ID}/messages/${msgSubmitTxReceipt.topicSequenceNumber.toString()}`
+    console.log(mnApiUrl);
+    await new Promise((resolve) => setTimeout(resolve, 6_000));
+    const mnApiResponse = await fetch(mnApiUrl);
+    const mnApiObject = await mnApiResponse.json();
+    const hcsReadMsgRaw = Buffer.from(mnApiObject.message, 'base64');
     const hcsReadMsg = JSON.parse(hcsReadMsgRaw);
     const {
         from: hcsReadFrom,
@@ -83,7 +95,7 @@ async function main() {
     } = hcsReadMsg;
     const hcsReadEncryptedMsgBuf = Buffer.from(hcsReadEncryptedMsg, 'base64url');
 
-    // decrypt originalMsg using readerAccount's private key --> decryptedMsg
+    // decrypt hcsReadMsg using readerAccount's private key --> decryptedMsg
     const decryptedMsg = await decrypt(hcsReadEncryptedMsgBuf, readerAccountEcdh, eciesOptions);
 
     // compare decryptedMsg to originalMsg
@@ -94,6 +106,19 @@ async function main() {
         hcsReadMsgRaw,
         decryptedMsg,
     });
+
+    // decrypt hcsReadMsg using readerAccount's private key --> FAILURE expected
+    const otherAccountEcdh = crypto.createECDH(eciesOptions.curveName);
+    otherAccountEcdh.setPrivateKey(otherAccount.privateKey.toBytesRaw());
+    let decryptedMsgByOther;
+    try {
+        decryptedMsgByOther = await decrypt(hcsReadEncryptedMsgBuf, otherAccountEcdh, eciesOptions);
+        console.log({
+            decryptedMsgByOther,
+        });
+    } catch (ex) {
+        console.log('Decryption by other account failed (expected).');
+    }
 
     await client.close();
 }
