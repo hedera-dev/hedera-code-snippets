@@ -21,6 +21,15 @@ In the `.env` file (copy from `.env.example`), you will see several entries of t
 
 To save yourself from the tedium of creating multiple accounts manually,
 you may wish to use the `bip39-create-accounts` code snippet from this repo.
+To do so, while in this directory, run the following command:
+
+```shell
+node ../bip39-create-accounts/create-accounts.js
+```
+
+This will generate several accounts,
+and write/ overwrite the `.env` file in this directory with the following format
+for each account generated:
 
 ```shell
 ACCOUNT_0_ID="CREATE_AN_ID"
