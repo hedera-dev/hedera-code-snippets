@@ -30,6 +30,7 @@ See: [sscce.org](http://sscce.org/)
 - Multisig Smart Contract Account: [`multisig-sc-account`](./multisig-sc-account/)
 - Create, mint, and delete HTS fungible tokens: [`hts-fungible-token`](./hts-fungible-token/)
 - BIP39 Create Accounts: [`bip39-create-accounts`](./bip39-create-accounts/)
+- HCS Topic Permissioned Write: [`hcs-topic-permissioned-write`](./hcs-topic-permissioned-write/)
 
 ## Contributing
 
