@@ -30,7 +30,7 @@ async function main() {
     console.log('Operator Account ID:', operatorId.toString());
 
     // Read in first 5 accounts from the `.env` file
-    // You may generate these accounts programmatically using `../bip39-create-accounts/`
+    // 🚨 Important 🚨: You may generate these accounts programmatically using `../bip39-create-accounts/`
     const accounts = new Array(5);
     for (let idx = 0; idx < 5; ++idx) {
         const id = process.env[`ACCOUNT_${idx}_ID`];
