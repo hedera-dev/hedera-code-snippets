@@ -5,6 +5,7 @@ import {
     Client,
     AccountId,
     PrivateKey,
+    TopicMessageSubmitTransaction,
 } from '@hashgraph/sdk';
 import dotenv from 'dotenv';
 
@@ -20,13 +21,22 @@ const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 
+// parse topic and cron configuration from environment variables, with fallback
+const cronStr = process.env.CRON_STR || '*/5 * * * * *';
+const topicId = process.env.TOPIC_ID || '0.0.3745107';
+const limitPerTask = parseInt(process.env.MAX_MESSAGE_PER_QUERY || '10', 10);
+const limitConsecutiveQueries = parseInt(process.env.MAX_QUERY_PER_CRON || '3', 10);
+let lastSequenceNumber = 0;
+let lastTimeStamp = parseInt(process.env.MIN_MESSAGE_TIMESTAMP || '0.000000000', 10);
+
 //entrypoint for execution of this example (called at the bottom of the file)
 async function main() {
     console.log('Operator Account ID:', operatorId.toString());
 
+    // configure the cron job from the 'cron' npm package
     const cronJob = CronJob.from({
-        // once every 5 seconds
-        cronTime: '*/5 * * * * *',
+        // specify when to run on cron format
+        cronTime: cronStr,
 
         // job to execute each cycle
         onTick: cronTask,
@@ -44,7 +54,23 @@ async function main() {
     // start the cron job
     cronJob.start();
 
-    await new Promise((resolve) => setTimeout(resolve, 60_000));
+    // wait for for a while
+    await new Promise((resolve) => setTimeout(resolve, 10_000));
+
+    // write an additional message to the topic
+    console.log('Writing additional message to topic');
+    const txResponse = await new TopicMessageSubmitTransaction({
+        topicId: topicId,
+        message: JSON.stringify({
+            at: (new Date().toString()),
+            msg: `cron job test on ${topicId}`,
+        }),
+      })
+      .execute(client);
+    /* const txReceipt =*/ await txResponse.getReceipt(client);
+
+    // wait wait for a while
+    await new Promise((resolve) => setTimeout(resolve, 10_000));
 
     // stop the cron job
     cronJob.stop();
@@ -53,12 +79,6 @@ async function main() {
 }
 
 main();
-
-const topicId = '0.0.3745107';
-const limitPerTask = 10;
-const limitConsecutiveQueries = 3;
-let lastSequenceNumber = 0;
-let lastTimeStamp = '0.000000000';
 
 async function cronTask() {
     console.log(new Date().toISOString(), 'cronTask');
