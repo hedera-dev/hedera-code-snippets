@@ -29,7 +29,7 @@ const limitConsecutiveQueries = parseInt(process.env.MAX_QUERY_PER_CRON || '3', 
 let lastSequenceNumber = 0;
 let lastTimeStamp = parseInt(process.env.MIN_MESSAGE_TIMESTAMP || '0.000000000', 10);
 
-//entrypoint for execution of this example (called at the bottom of the file)
+// entry point for execution of this example (called at the bottom of the file)
 async function main() {
     console.log('Operator Account ID:', operatorId.toString());
 
@@ -69,7 +69,7 @@ async function main() {
       .execute(client);
     /* const txReceipt =*/ await txResponse.getReceipt(client);
 
-    // wait wait for a while
+    // wait for a while
     await new Promise((resolve) => setTimeout(resolve, 10_000));
 
     // stop the cron job
@@ -83,6 +83,7 @@ main();
 async function cronTask() {
     console.log(new Date().toISOString(), 'cronTask');
 
+    // loop up to configured limit to query mirror node API for messages
     let consecutiveQueries = limitConsecutiveQueries;
     do {
         consecutiveQueries -= 1;
@@ -128,6 +129,7 @@ async function cronComplete() {
     console.log(new Date().toISOString(), 'cronComplete');
 }
 
+// this is where you would place any custom logic for what you wish to do with the messages
 async function processMessage(parsedMessage, sequenceNumber, timestamp) {
     console.log(`#${sequenceNumber} - ${parsedMessage}`);
 }
