@@ -54,9 +54,60 @@ async function main() {
 
 main();
 
+const topicId = '0.0.3745107';
+const limitPerTask = 10;
+const limitConsecutiveQueries = 3;
+let lastSequenceNumber = 0;
+let lastTimeStamp = '0.000000000';
+
 async function cronTask() {
-    console.log(new Date().toISOString(), 'cronTask TODO impl me');
+    console.log(new Date().toISOString(), 'cronTask');
+
+    let consecutiveQueries = limitConsecutiveQueries;
+    do {
+        consecutiveQueries -= 1;
+
+        // Perform a Mirror Node API request
+        const mnApiQueryStr =
+            `timestamp=gt%3A${lastTimeStamp}&limit=${limitPerTask}&encoding=base64&order=asc`;
+        const mnApiUrl =
+            `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages?${mnApiQueryStr}`;
+        const mnApiResponse = await fetch(mnApiUrl);
+        const mnApiObject = await mnApiResponse.json();
+        if (mnApiObject.messages.length < 1) {
+            console.log(`No new messages detected in ${topicId}`);
+            break;
+        }
+
+        // Iterate over any newly received messages
+        mnApiObject.messages.forEach((msg) => {
+            const sequenceNumber = msg.sequence_number;
+            const timestamp = msg.consensus_timestamp;
+            const parsedMessage = Buffer.from(msg.message, 'base64').toString();
+
+            // Keep track of sequence number and timestamp of last retrieved message in topic
+            // for subsequent requests
+            if (sequenceNumber > lastSequenceNumber) {
+                lastSequenceNumber = sequenceNumber;
+                lastTimeStamp = timestamp;
+            }
+
+            // Process message
+            processMessage(parsedMessage, sequenceNumber, timestamp);
+        });
+
+        const nextLinks = mnApiObject.links && mnApiObject.links.next;
+        console.log('nextLinks', nextLinks);
+        if (!nextLinks) {
+            break;
+        }
+    } while (consecutiveQueries > 0)
 }
+
 async function cronComplete() {
-    console.log(new Date().toISOString(), 'cronComplete TODO impl me');
+    console.log(new Date().toISOString(), 'cronComplete');
+}
+
+async function processMessage(parsedMessage, sequenceNumber, timestamp) {
+    console.log(`#${sequenceNumber} - ${parsedMessage}`);
 }
