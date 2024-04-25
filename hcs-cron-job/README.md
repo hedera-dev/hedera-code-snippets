@@ -1,8 +1,8 @@
-# (Title of code snippet)
+# HCS Cron Jon
 
-(Explain context for code snippet)
-
-(Optional) This code snippet was contributed by [YOUR_GITHUB_ID](https://github.com/YOUR_GITHUB_ID).
+Runs a cron job which reads from a HCS Topic on a specific schedule (cron),
+parses any newly added messages,
+and conditionally invokes a task based on that message.
 
 ## Code
 
@@ -11,24 +11,3 @@
 ## References
 
 - (Links to relevant HIPs, Stackoverflow questions, documentation, etc)
-
-TODO delete below line!
-----
-
-To create a npm/ Javascript task based example:
-
-```
-SNIPPET="foo-bar"
-cd ../
-pwd
-echo "Ensure in root directory of hedera-code-snippets"
-git fetch origin main:main
-git checkout -b feat/${SNIPPET}
-cp -r ./templates ./${SNIPPET}
-cd ./${SNIPPET}
-echo "Edit package.json to update Hedera SDK version"
-cp .env.example .env
-echo "Replace .env placeholder values"
-echo "Rename task.js and update its contents"
-npm i
-```

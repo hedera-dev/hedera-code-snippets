@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { CronJob } from 'cron';
 import {
     Client,
     AccountId,
@@ -23,7 +24,39 @@ const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 async function main() {
     console.log('Operator Account ID:', operatorId.toString());
 
+    const cronJob = CronJob.from({
+        // once every 5 seconds
+        cronTime: '*/5 * * * * *',
+
+        // job to execute each cycle
+        onTick: cronTask,
+
+        // job to execute when job is terminated
+        onComplete: cronComplete,
+
+        // whether to start the job immediately
+        start: true,
+
+        // time based on
+        timeZone: 'Asia/Singapore'
+    });
+
+    // start the cron job
+    cronJob.start();
+
+    await new Promise((resolve) => setTimeout(resolve, 60_000));
+
+    // stop the cron job
+    cronJob.stop();
+
     await client.close();
 }
 
 main();
+
+async function cronTask() {
+    console.log(new Date().toISOString(), 'cronTask TODO impl me');
+}
+async function cronComplete() {
+    console.log(new Date().toISOString(), 'cronComplete TODO impl me');
+}
