@@ -5,10 +5,11 @@ There are many companies and users who want to take advantage of the powerful ca
 
 ## Sample Flow Description
 
-We have two actors. Bob is a company that wants to do transactions on Hedera, but do not want to manage HBAR to fund their transactions. Alice is a company that offers services as a crypto intermediary.
-Bob and Alice enter into a service agreement where Bob pays Alice fees in FIAT, and Alice agrees to act as the payer (in HBAR) for Bob's transactions. After entering into the agreement Alice sets up a payer account to fund Bob's transactions and provides infrastructure for Boby to send Alice the transactions for signing and submission.
+We have two actors. Bob is a company that wants to do transactions on Hedera, but does not want to manage HBAR to fund their transactions. Alice is a company that offers services as a crypto intermediary.
+Bob and Alice enter into a service agreement where Bob pays Alice fees in Fiat, and Alice agrees to act as the payer (in HBAR) for Bob's transactions. After entering into the agreement Alice sets up a payer account to fund Bob's transactions and provides infrastructure for Bob to send Alice the transactions for signing and submission.
 
 This sample flow starts with Bob creates a transaction designating Alice as the payer. Bob then signs the transaction and freezes the transaction. Bob then sends over the frozen transaction payload to Alice (using infrastructure provided by Alice). Alice receives the payload, signs the payload, and submits the transaction to the Hedera network for consensus. 
+![Crypto intermediary (2)](https://github.com/Reccetech/hedera-code-snippets/assets/24242092/c39889be-bc13-41ca-b719-f271b09277f1)
 
 #### Considerations
 In this proposed flow there are a number of business and security considerations
