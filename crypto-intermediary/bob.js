@@ -12,7 +12,7 @@ const {
 
 // Grab the OPERATOR_ID and OPERATOR_KEY from the .env file
 const BobAccountId = AccountId.fromString(process.env.BOB_OPERATOR_ID);
-const BobPrivateKey = PrivateKey.fromString(process.env.BOB_OPERATOR_KEY);
+const BobPrivateKey = PrivateKey.fromStringED25519(process.env.BOB_OPERATOR_KEY);
 const AliceAccountId = AccountId.fromString(process.env.ALICE_OPERATOR_ID);
 
 // Build Hedera testnet and mirror node client

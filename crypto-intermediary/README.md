@@ -13,7 +13,7 @@ This sample flow starts with Bob creates a transaction designating Alice as the 
 
 #### Considerations
 In this proposed flow there are a number of business and security considerations
-1. The transaction must be submitted to the Hedera network within 3min of Bob signing the transaction unless Bob designates a different timestamp.
+1. The transaction must be submitted to the Hedera network within 3min of Bob signing the transaction unless Bob designates a different timestamp to a point in the future.
 2.  Alice in her agreement with Bob takes on responsibility to ensure the transaction is successfully submitted.
 3.  Alice would need to provide a mechanism to provide Bob the transactions details, report transaction errors, etc.
 4. There is a security risk that a malicious Bob could include transactions that harm Alice (i.e. a crypto transfer that drains an Alice account). To mitigate this risk:
