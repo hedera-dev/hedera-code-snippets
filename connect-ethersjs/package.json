@@ -1,0 +1,7 @@
+{
+    "type": "module",
+    "dependencies": {
+        "dotenv": "16.4.1",
+        "ethers": "5.7.2"
+    }
+}

@@ -9,10 +9,14 @@ See: [sscce.org](http://sscce.org/)
 - Associate token using JS SDK: [`associate-token-js-sdk`](./associate-token-js-sdk/)
 - Associate token using ethers.js & Metamask: [`associate-token-via-ethers`](./associate-token-via-ethers/)
 - Check if an account is associated to a token using JS SDK: [`is-associated-js`](./is-associated-js/)
+- Connect to Hedera Testnet via EthersJs: [`connect-ethersjs`](./connect-ethersjs/)
+- Connect to Hedera Testnet via Viem: [`connect-viem`](./connect-viem/)
 - Convert address from Hedera-native (`S.R.N`) format to EVM (`0x...`) format: [`convert-hedera-native-address-to-evm-address`](./convert-hedera-native-address-to-evm-address/)
 - Convert public key to account ID (`S.R.N` format): [`convert-public-key-to-account-id`](./convert-public-key-to-account-id/)
+- DApp built with Viem connected to Hedera Testnet: [`dapp-viem`](./dapp-viem/)
 - Dissociate token using JS SDK: [`dissociate-token-js-sdk`](./dissociate-token-js-sdk/)
 - Dissociate token using ethers.js & MetaMask: [`dissociate-via-ethers`](./dissociate-token-via-ethers/)
+- Get Account Info Using Hedera Portal API Keys: [`get-account-info-using-portal-api-keys`](./get-account-info-using-portal-api-keys/)
 - Obtain "block" number based on timestamp: [`obtain-block-number-from-timestamp`](./obtain-block-number-from-timestamp/)
 - Smallest units of HBAR in smart contracts: [`smallest-hbar-units-smart-contracts`](./smallest-hbar-units-smart-contracts/)
 - Random number generation using system contract: [`prng-system-contract`](./prng-system-contract/)
@@ -26,6 +30,8 @@ See: [sscce.org](http://sscce.org/)
 - Multisig Account: [`multisig-account`](./multisig-account/)
 - Multisig Smart Contract Account: [`multisig-sc-account`](./multisig-sc-account/)
 - Create, mint, and delete HTS fungible tokens: [`hts-fungible-token`](./hts-fungible-token/)
+- BIP39 Create Accounts: [`bip39-create-accounts`](./bip39-create-accounts/)
+- HCS Topic Permissioned Write: [`hcs-topic-permissioned-write`](./hcs-topic-permissioned-write/)
 
 ## Contributing
 
@@ -37,7 +43,7 @@ See: [sscce.org](http://sscce.org/)
 - Something that you think is worth explaining. For example:
   - Solutions/ workarounds for commonly encountered issues.
   - Demonstrate nuances/ differences between Hedera and other DLTs.
-  - Doing something *tricky*.
+  - Doing something _tricky_.
 
 ### How to contribute
 

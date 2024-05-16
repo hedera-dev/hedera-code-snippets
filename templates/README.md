@@ -6,8 +6,29 @@
 
 ## Code
 
-(Point out specific files in the code snippet, and explain their implmentation, and how it works)
+(Point out specific files in the code snippet, and explain their implementation, and how it works)
 
 ## References
 
-- (Links to relevant HIPs, stackoverflow questions, documentation, etc)
+- (Links to relevant HIPs, Stackoverflow questions, documentation, etc)
+
+TODO delete below line!
+----
+
+To create a npm/ Javascript task based example:
+
+```
+SNIPPET="foo-bar"
+cd ../
+pwd
+echo "Ensure in root directory of hedera-code-snippets"
+git fetch origin main:main
+git checkout -b feat/${SNIPPET}
+cp -r ./templates ./${SNIPPET}
+cd ./${SNIPPET}
+echo "Edit package.json to update Hedera SDK version"
+cp .env.example .env
+echo "Replace .env placeholder values"
+echo "Rename task.js and update its contents"
+npm i
+```

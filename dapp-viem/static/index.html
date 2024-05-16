@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Viem + Hedera Demo DApp</title>
+    <meta name="description" content="Viem + Hedera Demo DApp">
+  </head>
+  <body>
+    <h1>Viem + Hedera Demo DApp</h1>
+    <div id="dapp">
+      <div id="addChain">
+        <button id="addChainMainnet">Add Hedera Mainnet</button>
+        <br />
+        <button id="addChainTestnet">Add Hedera Testnet</button>
+        <br />
+        <button id="addChainPreviewnet">Add Hedera Previewnet</button>
+      </div>
+      <hr />
+      <div id="transfer">
+        <label for="transferAmount" title="in HBAR">amount:</label>
+        <br />
+        <input type="number" id="transferAmount" value="1.2345" />
+        <br />
+        <label for="transferTo" title="recipient address (begins with 0x)">to:</label>
+        <br />
+        <input type="text" id="transferTo" value="0x9a814B5AFd6B0fFF1e9548dCbA4d09cDD8c81568" />
+        <br />
+        <button id="transferExecute">Transfer!</button>
+      </div>
+    </div>
+    <script type="module" src="dapp.js"></script>
+  </body>
+</html>
