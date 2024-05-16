@@ -15,6 +15,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// use default HCS topic if none is specified
 const HCS_TOPIC_ID = process.env.HCS_TOPIC_ID || '0.0.3745107';
 const eciesOptions = {
     // use all default options
@@ -32,7 +33,7 @@ const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 
-//entrypoint for execution of this example (called at the bottom of the file)
+// entry point for execution of this example (called at the bottom of the file)
 async function main() {
     console.log('Operator Account ID:', operatorId.toString());
 
