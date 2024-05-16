@@ -18,6 +18,9 @@ from the Hedera SDK, with some differences:
 - Uses configurable `cron` based scheduling
 - Uses polling, instead of subscription
 
+This code snippet requires multiple accounts to be configured in the `.env` file.
+Suggested: Use [`bip39-create-accounts`](../bip39-create-accounts) to generate a set of accounts in your `.env` file.
+
 ## Code
 
 - The `cronTask` function performs most of the work
@@ -32,7 +35,6 @@ from the Hedera SDK, with some differences:
 - The `processMessage` function is where custom logic for handling the messages should be included
   - In this case, the messages are simply printed to the terminal
   - Replace this with your use case specific requirements
-
 
 ## References
 
