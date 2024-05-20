@@ -31,4 +31,7 @@ cp .env.example .env
 echo "Replace .env placeholder values"
 echo "Rename task.js and update its contents"
 npm i
+git add .env.example .gitignore README.md task.js # replace task.js with renamed file
+git commit -s -S -m "proj: scaffold new code snippet"
+git push origin feat/${SNIPPET}
 ```
