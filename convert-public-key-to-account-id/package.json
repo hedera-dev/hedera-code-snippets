@@ -1,0 +1,8 @@
+{
+    "type": "module",
+    "dependencies": {
+        "@hashgraph/sdk": "2.39.0",
+        "dotenv": "16.3.1",
+        "rfc4648": "1.5.3"
+    }
+}
