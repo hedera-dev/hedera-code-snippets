@@ -18,7 +18,7 @@ this should produce the following output:
 - It reads in the account ID and private key from a `.env` file
 - It derives a public key from the private key
 - Next it queries a Mirror Node API with the public key
-- Finally it parses the Miror Node API response to extract the account ID
+- Finally it parses the Mirror Node API response to extract the account ID
 
 ```text
 ** Method 1: Use Mirror Node API
@@ -40,8 +40,6 @@ this should produce the following output:
              operatorId: 0.0.1186
 operatorPublicKeyRawStr: 30a028ee7fd716c438de818a8831ed2235d0f85e430ab036dbfac173eb50aef9
          protoBufPrefix: 1220
-              bufferRaw:  0�(���8ށ��1�"5��^C
-�6���s�P��
    operatorIdDerivedRaw: CIQDBIBI5Z75OFWEHDPIDCUIGHWSENOQ7BPEGCVQG3N7VQLT5NIK56I
 ```
 
@@ -52,4 +50,4 @@ operatorPublicKeyRawStr: 30a028ee7fd716c438de818a8831ed2235d0f85e430ab036dbfac17
 - [HIP-583: Expand alias support in CryptoCreate & CryptoTransfer Transactions](https://hips.hedera.com/hip/hip-583)
 - [Mirror Node API docs](https://docs.hedera.com/hedera/sdks-and-apis/rest-api)
 - [Mirror Node API swagger](https://testnet.mirrornode.hedera.com/api/v1/docs/#/accounts/listAccounts)
-- [Stackoverflow: How can I convert a Hedera Account ID Alias (hexadecimal) into a Hedera Account ID Alias (chacracters only)?](https://stackoverflow.com/q/77657721/194982)
+- [Stackoverflow: How can I convert a Hedera Account ID Alias (hexadecimal) into a Hedera Account ID Alias (characters only)?](https://stackoverflow.com/q/77657721/194982)

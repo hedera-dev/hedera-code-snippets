@@ -10,18 +10,12 @@ import { base32 } from 'rfc4648';
 
 dotenv.config();
 
-function convert(hederaNativeAddress) {
-    const { shard, realm, num } =
-        EntityIdHelper.fromString(hederaNativeAddress);
-    return EntityIdHelper.toSolidityAddress([shard, realm, num]);
-}
-
 async function main() {
     // ensure required environment variables are available
     if (!process.env.OPERATOR_ID || !process.env.OPERATOR_KEY) {
         throw new Error('Must set OPERATOR_ID and OPERATOR_KEY in .env');
     }
-    
+
     // configure client using environment variables
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorPrivateKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
@@ -53,7 +47,6 @@ async function main() {
     console.log(`             operatorId: ${operatorId}`);
     console.log(`operatorPublicKeyRawStr: ${operatorPublicKeyRawStr}`);
     console.log(`         protoBufPrefix: ${protoBufPrefix}`);
-    console.log(`              bufferRaw: ${bufferRaw}`);
     console.log(`   operatorIdDerivedRaw: ${operatorIdDerivedRaw}`);
 }
 
