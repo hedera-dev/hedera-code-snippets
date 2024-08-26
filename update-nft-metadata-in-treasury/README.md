@@ -14,12 +14,12 @@ This code snippet demonstrates creating an NFT collection, minting an NFT, and u
 
 #### Example output
 ```bash
-The NFT collection ID is 0.0.8362
+The NFT collection ID is 0.0.4786
 The NFT serial number is 1
-The NFT metadata is: 1
-The transaction ID of the token metadata update transaction is 0.0.1297@1724344914.081631556
+The NFT metadata is: ipfs://bafkreiap62fsqxmo4hy45bmwiqolqqtkhtehghqauixvv5mcq7uofdpvt4
+The transaction ID of the token metadata update transaction is 0.0.1307@1724693785.074555572
 The NFT metadata update transaction was SUCCESS
-The NFT meta data is: 3
+The updated NFT metadata is: ipfs://bafkreidrqy67amvygjnvgr2mgdgqg2alaowoy34ljubot6qwf6bcf4yma4
 ```
 
 

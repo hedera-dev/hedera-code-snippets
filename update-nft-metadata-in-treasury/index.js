@@ -35,16 +35,19 @@ async function createNftCollection() {
 }
 
 async function mintTokenWithMetadata(tokenId) {
+
+    const CID = 'bafkreiap62fsqxmo4hy45bmwiqolqqtkhtehghqauixvv5mcq7uofdpvt4' // Content Identifier (CID) identifies the nft metadata
     /*
         Metadata should follow the JSON schema V2. 
         This schema requires you to store your token metadata using a storage service.
         View HIP-412 to learn more https://hips.hedera.com/hip/hip-412
     */
-    const metadata = new Uint8Array([1]); // This should be a URI string [protocol://resource_location] or CID
+    const metadata = Buffer.from(`ipfs://${CID}`); // This should be a URI string [protocol://resource_location] or CID
+
     
     // Mint an NFT and set the metadata
     const mintNft = new TokenMintTransaction()
-        .setMetadata(metadata)
+        .setMetadata([metadata])
         .setTokenId(tokenId)
         .freezeWith(client);
 
@@ -60,9 +63,9 @@ async function mintTokenWithMetadata(tokenId) {
 }
 
 async function updateNftMetadataWithinTreasury(tokenId, nftSerial) {
-
+    const CID = 'bafkreidrqy67amvygjnvgr2mgdgqg2alaowoy34ljubot6qwf6bcf4yma4'
     // Metadata to update the NFT with
-    const newMetadata = new Uint8Array([3]);
+    const newMetadata = Buffer.from(`ipfs://${CID}`);
 
     // Update the NFT metadata while it is in the treasury account and sign with the supply key
     const updateNftMetadata = new TokenUpdateNftsTransaction()
@@ -83,7 +86,7 @@ async function updateNftMetadataWithinTreasury(tokenId, nftSerial) {
     const getReceipt = (await submitTx).getReceipt(client);
     const status = (await getReceipt).status;
     console.log("The NFT metadata update transaction was " + status.toString());
-    console.log(`The NFT meta data is: ${newMetadata}`);
+    console.log(`The updated NFT metadata is: ${newMetadata}`);
 }
 
 const nftCollectionID = await createNftCollection();
