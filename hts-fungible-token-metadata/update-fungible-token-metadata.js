@@ -27,7 +27,7 @@ async function updateTokenMetadata(tokenId, newMetadata, metadataKey) {
         // Prepare token update transaction
         const tokenUpdateTx = new TokenUpdateTransaction()
             .setTokenId(tokenId)
-            .setMetadata(Buffer.from(newMetadata)) // Convert new metadata to Buffer
+            .setMetadata(Buffer.from(newMetadata)) 
             .freezeWith(client);
 
         // Sign the transaction with metadata key
