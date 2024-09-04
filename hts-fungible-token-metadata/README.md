@@ -87,7 +87,8 @@ Uploaded JSON successfully: {
 
 
 ## A note on SDK version
-The TokenCreateTransaction() will throw a TypeError when used with .setMetadata if an older version of the SDK is used. 
+
+The `TokenCreateTransaction` will throw a `TypeError` when used with `setMetadata` if an older version of the SDK is used. 
 
 
 ## References
