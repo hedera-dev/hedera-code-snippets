@@ -24,17 +24,13 @@ async function updateTokenMetadata(tokenId, newMetadata, metadataKey) {
             .execute(client);
         console.log(`Token metadata before update:`, tokenInfo.metadata);
 
-        // Prepare token update transaction
         const tokenUpdateTx = new TokenUpdateTransaction()
             .setTokenId(tokenId)
             .setMetadata(Buffer.from(newMetadata)) 
             .freezeWith(client);
 
-        // Sign the transaction with metadata key
         const signedTokenUpdateTx = await tokenUpdateTx.sign(metadataKey);
-        // Execute the transaction
         const tokenUpdateTxResponse = await signedTokenUpdateTx.execute(client);
-        // Get receipt for the update transaction
         const tokenUpdateTxReceipt = await tokenUpdateTxResponse.getReceipt(client);
         console.log(`Status of token update transaction: ${tokenUpdateTxReceipt.status.toString()}`);
 
