@@ -56,7 +56,7 @@ Run this command to upload metadata to IPFS:
 node upload-metadata.js
 ```
 
-`See create-fungible-toke-with-metadata.js`
+See `create-fungible-toke-with-metadata.js`
 
 This script demonstrates how to create the fungible token while linking the metadata that was previously uploaded to IPFS. The metadata is attached to the token in the form of an IPFS URI, ensuring that token holders or users of the token can access the decentralized metadata.
 
