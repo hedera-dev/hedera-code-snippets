@@ -38,7 +38,7 @@ See `metadata-example.json` or `metadata-schema.txt`.
 
 See `.env.example`.
 
-Copy the .env.example file to .env, and fill in the required details, including your operator account credentials and Pinata JWT token. You will also need to fill in any necessary details for the metadata.
+Copy the `.env.example` file to `.env`, and fill in the required details, including your operator account credentials and Pinata JWT token. You will also need to fill in any necessary details for the metadata.
 
 See `create-fungible-token.js`
 
