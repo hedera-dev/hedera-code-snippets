@@ -33,6 +33,7 @@ The JSON metadata for a fungible token includes the following information:
 
 See `metadata-example.json` or `metadata-schema.txt`.
 
+
 ## Code
 
 See `.env.example`.
@@ -55,7 +56,6 @@ Run this command to upload metadata to IPFS:
 node upload-metadata.js
 ```
 
-
 `See create-fungible-toke-with-metadata.js`
 
 This script demonstrates how to create the fungible token while linking the metadata that was previously uploaded to IPFS. The metadata is attached to the token in the form of an IPFS URI, ensuring that token holders or users of the token can access the decentralized metadata.
@@ -65,6 +65,28 @@ Run this command to create the token with metadata:
 ```
 node create-fungible-toke-with-metadata.js
 ```
+
+
+#### Example output
+
+`upload-metadata.js`:
+
+```bash
+- Uploading JSON metadata to IPFS...
+Uploaded JSON successfully: {
+  IpfsHash: 'bafkreigntzxcq7rpbmfh7lkwghlx575cjy3qvktcd237ottokyf4eeyg6e',
+  PinSize: 307,
+  Timestamp: '2024-09-04T13:25:41.077Z'
+```
+
+`create-fungible-toke-with-metadata.js`:
+```bash
+- Created token with ID: 0.0.4813013
+```
+
+
+## A note on SDK version
+The TokenCreateTransaction() will throw a TypeError when used with .setMetadata if an older version of the SDK is used. 
 
 
 ## References
