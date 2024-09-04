@@ -6,7 +6,7 @@ const pinata = new PinataSDK({
 	pinataGateway: process.env.PINATA_GATEWAY,
 });
 
-async function uploadJsonToIpfsFcn() {
+async function uploadJsonToIpfs() {
     console.log(`\n=======================================`);
     console.log(`- Uploading JSON metadata to IPFS...`);
 
