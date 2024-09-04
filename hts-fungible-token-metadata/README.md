@@ -15,20 +15,20 @@ It’s important to note that while both token types now support metadata, they 
 The JSON metadata for a fungible token includes the following information:
 
     
-    description - human readable description of the token and corresponding project
-    smallestUnitName - the name of the smallest unit of the token
-    smallestUnitSymbol - the symbol of the smallest unit of the token
-    creator - the entity that created the token
-    creatorDID - the decentralized identifier of the creator
-    admin - if the token has an admin key, the entity that manages that key
-    lightLogo - a logo for the token designed for light backgrounds. svg is recommended.
-    lightLogoType - if the lightLogo is specified, its mime type
-    darkLogo - a logo for the token designed for dark backgrounds. svg is recommended.
-    darkLogoType - if the darkLogo is specified, its mime type
-    website address -the address at which additional information on the token or corresponding project
-    chat/discord address - the address at which the project’s community holds discussion
-    whitepaper address - the address at which the project’s whitepaper can be found
-    properties - container for arbitrary token attributes not specifically listed above
+ - `description` - human readable description of the token and corresponding project
+- `smallestUnitName` - the name of the smallest unit of the token
+- `smallestUnitSymbol` - the symbol of the smallest unit of the token
+- `creator` - the entity that created the token
+- `creatorDID` - the decentralized identifier of the creator
+- `admin` - if the token has an admin key, the entity that manages that key
+- `lightLogo` - a logo for the token designed for light backgrounds. svg is recommended.
+- `lightLogoType` - if the lightLogo is specified, its mime type
+- `darkLogo` - a logo for the token designed for dark backgrounds. svg is recommended.
+- `darkLogoType` - if the darkLogo is specified, its mime type
+- `website` address - the address at which additional information on the token or corresponding project
+- `discussion` - the address at which the project’s community holds discussion
+- `whitepaper` address - the address at which the project’s whitepaper can be found
+- `properties` - container for arbitrary token attributes not specifically listed above
 
 
 See `metadata-example.json` or `metadata-schema.txt`.
