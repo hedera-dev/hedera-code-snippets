@@ -95,14 +95,11 @@ The `TokenCreateTransaction` will throw a `TypeError` when used with `setMetadat
 
 - [Discord: Unable to set the metadata when creating a new fungible token](https://discord.com/channels/373889138199494658/768621337865486347/1278604790670299136)  
   Question on Discord about metadata during the creation of a fungible token on Hedera.
-
 - Fungible Token script adapted from original implementation in:  
   [Hedera Docs: Create and Transfer your first Fungible Token](https://docs.hedera.com/hedera/tutorials/token/create-and-transfer-your-first-fungible-token)  
   Official Hedera documentation providing a step-by-step guide to creating and transferring fungible tokens.
-
 - [Github repo: Hedera Example HTS NFT](https://github.com/ed-marquez/hedera-example-hts-nft-blog-p1-p2-p3/blob/main/uploadJsonToIpfs.jss)  
   Original uploadJsonToIpfs.js script by Ed Marquez
-
 - [HIP-405](https://hips.hedera.com/hip/hip-405)
 - [HIP-412](https://hips.hedera.com/hip/hip-412)
 
