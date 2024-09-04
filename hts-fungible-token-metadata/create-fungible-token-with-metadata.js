@@ -26,7 +26,7 @@ async function createFungibleToken() {
     let tokenCreateTx = await new TokenCreateTransaction()
         .setTokenName("Test")
         .setTokenSymbol("TEST")
-        .setMetadata(Buffer.from("ipfs://bafkreigdmoccfta7fic3xt5imohlmrav5xxbstbo744ygjqlh7dhcgroou"))
+        .setMetadata(Buffer.from(process.env.IPFS_CID))
         .setTokenType(TokenType.FungibleCommon)
         .setDecimals(3)
         .setInitialSupply(10000)
@@ -47,8 +47,6 @@ async function createFungibleToken() {
 
 
 createFungibleToken();
-
-
 
 
 

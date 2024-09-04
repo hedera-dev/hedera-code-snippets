@@ -73,16 +73,26 @@ node create-fungible-toke-with-metadata.js
 
 ```bash
 - Uploading JSON metadata to IPFS...
-Uploaded JSON successfully: {
-  IpfsHash: 'bafkreigntzxcq7rpbmfh7lkwghlx575cjy3qvktcd237ottokyf4eeyg6e',
-  PinSize: 307,
-  Timestamp: '2024-09-04T13:25:41.077Z'
+Uploaded JSON successfully: bafkreigdmoccfta7fic3xt5imohlmra...
+IPFS_CID updated in .env file.
 ```
 
 `create-fungible-toke-with-metadata.js`:
 
 ```bash
-- Created token with ID: 0.0.4813013
+- Created new metadataKey: 302e020100300506032b65...
+METADATA_KEY updated in .env file.
+- Created token with ID: 0.0.4813...
+
+TOKEN_ID updated in .env file.
+```
+
+`update-fungible-toke-with-metadata.js`:
+
+```bash
+Token metadata before update: <Buffer 69 70 66 73 ... >
+Status of token update transaction: SUCCESS
+Token updated metadata: <Buffer 69 70 66 73 63 ...>
 ```
 
 

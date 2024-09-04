@@ -51,7 +51,7 @@ async function updateTokenMetadata(tokenId, newMetadata, metadataKey) {
 
 // Replace with your token ID, new metadata, and the metadata key
 const tokenId = process.env.TOKEN_ID; 
-const newMetadata = "ipfs://new_ipfs_metadata_link";
+const newMetadata = process.env.IPFS_CID;
 const metadataKey = PrivateKey.fromString(process.env.METADATA_KEY);
 
 updateTokenMetadata(tokenId, newMetadata, metadataKey);
