@@ -31,4 +31,4 @@ async function uploadJsonToIpfsFcn() {
     }
 }
 
-uploadJsonToIpfsFcn();
+uploadJsonToIpfs();
