@@ -33,6 +33,7 @@ See: [sscce.org](http://sscce.org/)
 - Create, mint, and delete HTS fungible tokens: [`hts-fungible-token`](./hts-fungible-token/)
 - BIP39 Create Accounts: [`bip39-create-accounts`](./bip39-create-accounts/)
 - HCS Topic Permissioned Write: [`hcs-topic-permissioned-write`](./hcs-topic-permissioned-write/)
+- HTS Fungible Token Creation & Update with Metadata, inc. IPFS upload script [`hts-fungible-token-metadata`](./hts-fungible-token-metadata/)
 
 ## Contributing
 
