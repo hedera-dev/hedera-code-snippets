@@ -38,17 +38,17 @@ See `metadata-example.json` or `metadata-schema.txt`.
 
 See `.env.example`.
 
-Copy the `.env.example` file to `.env`, and fill in the required details, including your operator account credentials and Pinata JWT token. You will also need to fill in any necessary details for the metadata.
+Copy the `.env.example` file to `.env`, and fill in the required details, including your operator account credentials and Pinata JWT token. You will also need to fill in any necessary details for the metadata, if the upload script is not used.
 
 See `create-fungible-token.js`
 
 This script demonstrates how to create a fungible token on the Hedera Testnet using the Hedera SDK. It sets the token name, symbol, initial supply, and attaches a metadata reference stored on IPFS. The metadata contains a reference to an IPFS file containing additional metadata, such as the token creator, logo, whitepaper etc.
 
-The script signs the transaction with the operator’s private key and submits it to the Hedera network for token creation.
+The script signs the transaction with the operator’s private key and submits it to the Hedera network for token creation. It also writes the new Token ID & Metadata Key to the .env file.
 
 See `upload-metadata.js`
 
-This script uploads the token's metadata JSON to IPFS via the Pinata SDK. By uploading the token’s metadata to IPFS, we ensure that it is stored in a decentralized manner. The resulting IPFS hash (CID) is then used as part of the metadata in the token creation process.
+This script uploads the token's metadata JSON to IPFS via the Pinata SDK. By uploading the token’s metadata to IPFS, we ensure that it is stored in a decentralized manner. The resulting IPFS hash (CID) is then used as part of the metadata in the token creation process. The resulting CID is saved to your .env file.
 
 Run this command to upload metadata to IPFS:
 

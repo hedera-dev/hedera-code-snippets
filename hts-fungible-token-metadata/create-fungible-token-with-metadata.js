@@ -45,7 +45,6 @@ async function createFungibleToken() {
     updateEnvFile('TOKEN_ID', tokenId.toString());
 }
 
-
 createFungibleToken();
 
 

@@ -11,14 +11,15 @@ async function uploadJsonToIpfs() {
     console.log(`\n=======================================`);
     console.log(`- Uploading JSON metadata to IPFS...`);
 
-    const metadata = {
-		description: "TEST Tokens ($TEST) to test functionality.",
-        creator: "some tester",
-        lightLogo: "ipfs://QmQc7si95gL1gsMqhD8R2sNeRLodG8od53Jn2rfczatovg",
-        lightLogoType: "image/svg",
-        website: "https://hips.hedera.com/hip/hip-405",
-        whitepaper: "https://files.hedera.com/hh_whitepaper_v2.2-20230918.pdf"
-    };
+    // Load metadata from a file (metadata-example.json) - replace with name of your file if not using the example
+    let metadata;
+    try {
+        const data = fs.readFileSync('metadata-example.json', 'utf8');
+        metadata = JSON.parse(data);
+    } catch (err) {
+        console.error("Error reading metadata file:", err);
+        return;
+    }
 
     try {
         // Upload JSON to IPFS via Pinata
@@ -29,14 +30,14 @@ async function uploadJsonToIpfs() {
         const ipfsHash = upload.IpfsHash;  
         console.log(`Uploaded JSON successfully: ${ipfsHash}`);
 
-        // Write the IPFS CID to the .env file – comment out if not needed
+        // Write the IPFS CID to the .env file
         updateEnvFile("IPFS_CID", ipfsHash);
     } catch (error) {
         console.error(`Error uploading JSON:`, error);
     }
 }
 
-
+uploadJsonToIpfs();
 
 
 
@@ -69,4 +70,3 @@ function updateEnvFile(key, value) {
     }
 }
 
-uploadJsonToIpfs();
