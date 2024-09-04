@@ -11,6 +11,9 @@ const {
 
 const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+const tokenId = process.env.TOKEN_ID; 
+const newMetadata = process.env.IPFS_CID;
+const metadataKey = PrivateKey.fromString(process.env.METADATA_KEY);
 
 const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 
@@ -29,10 +32,8 @@ async function updateTokenMetadata(tokenId, newMetadata, metadataKey) {
 
         // Sign the transaction with metadata key
         const signedTokenUpdateTx = await tokenUpdateTx.sign(metadataKey);
-
         // Execute the transaction
         const tokenUpdateTxResponse = await signedTokenUpdateTx.execute(client);
-
         // Get receipt for the update transaction
         const tokenUpdateTxReceipt = await tokenUpdateTxResponse.getReceipt(client);
         console.log(`Status of token update transaction: ${tokenUpdateTxReceipt.status.toString()}`);
@@ -48,10 +49,5 @@ async function updateTokenMetadata(tokenId, newMetadata, metadataKey) {
         client.close();
     }
 }
-
-// Replace with your token ID, new metadata, and the metadata key
-const tokenId = process.env.TOKEN_ID; 
-const newMetadata = process.env.IPFS_CID;
-const metadataKey = PrivateKey.fromString(process.env.METADATA_KEY);
 
 updateTokenMetadata(tokenId, newMetadata, metadataKey);
