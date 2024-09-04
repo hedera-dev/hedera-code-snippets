@@ -80,6 +80,7 @@ Uploaded JSON successfully: {
 ```
 
 `create-fungible-toke-with-metadata.js`:
+
 ```bash
 - Created token with ID: 0.0.4813013
 ```
