@@ -1,0 +1,16 @@
+{
+    "description": "description of token - RECOMMENDED - max. of 500 characters",
+    "smallestUnitName" : "the name of the smallest denomination of these tokens, if the name exists - OPTIONAL",
+    "smallestUnitSymbol" : "the nsymbol of the smallest denomination of these tokens, if the symbol exists - OPTIONAL",
+    "creator": "creator(s) - RECOMMENDED",
+    "creatorDID": "DID  - OPTIONAL ",
+    "admin": "admin(s) - OPTIONAL",
+    "lightLogo": "IPFS CID or path to the token's light background logo file - RECOMMENDED",
+    "lightLogotype": "mime type - i.e. image/jpeg - CONDITIONALLY OPTIONAL ",
+    "darkLogo": "IPFS CID or path to the token's dark background logo file - RECOMMENDED",
+    "darkLogotype": "mime type - i.e. image/jpeg - CONDITIONALLY OPTIONAL ",
+    "website": "link to website -  OPTIONAL", 
+    "discussion": "link to discussion/discord -  OPTIONAL", 
+    "whitepaper": "link to whitepaper -  OPTIONAL",
+    "properties": "arbitrary additional data relevant to the token - OPTIONAL"
+}
