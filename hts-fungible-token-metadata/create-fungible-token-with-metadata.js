@@ -21,7 +21,7 @@ console.log(`- Created new metadataKey: ${metadataKey} \n`);
 updateEnvFile('METADATA_KEY', metadataKey.toString());
 
 
-// Function to create fungible token 
+// Function to create fungible token
 async function createFungibleToken() {
     let tokenCreateTx = await new TokenCreateTransaction()
         .setTokenName("Test")
@@ -45,14 +45,12 @@ async function createFungibleToken() {
     updateEnvFile('TOKEN_ID', tokenId.toString());
 }
 
-createFungibleToken();
-
-
-
-
+createFungibleToken().finally(() => {
+    client.close();
+});
 
 // ------------------------------------------------------------
-// Helper Functions 
+// Helper Functions
 // ------------------------------------------------------------
 
 // Helper function to read .env file

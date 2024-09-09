@@ -1,6 +1,6 @@
 # HTS Fungible Token with Metadata and File Upload to IPFS
 
-Create a Hedera Token Service (HTS) fungible token with metadata and upload related metadata files to IPFS using the Pinata SDK. 
+Create a Hedera Token Service (HTS) fungible token with metadata and upload related metadata files to IPFS using the Pinata SDK.
 
 ## Context
 
@@ -14,7 +14,7 @@ It’s important to note that while both token types now support metadata, they 
 
 The JSON metadata for a fungible token includes the following information:
 
-    
+
  - `description` - human readable description of the token and corresponding project
 - `smallestUnitName` - the name of the smallest unit of the token
 - `smallestUnitSymbol` - the symbol of the smallest unit of the token
@@ -40,30 +40,34 @@ See `.env.example`.
 
 Copy the `.env.example` file to `.env`, and fill in the required details, including your operator account credentials and Pinata JWT token. You will also need to fill in any necessary details for the metadata, if the upload script is not used.
 
-See `create-fungible-token.js`
-
-This script demonstrates how to create a fungible token on the Hedera Testnet using the Hedera SDK. It sets the token name, symbol, initial supply, and attaches a metadata reference stored on IPFS. The metadata contains a reference to an IPFS file containing additional metadata, such as the token creator, logo, whitepaper etc.
-
-The script signs the transaction with the operator’s private key and submits it to the Hedera network for token creation. It also writes the new Token ID & Metadata Key to the .env file.
-
 See `upload-metadata.js`
 
 This script uploads the token's metadata JSON to IPFS via the Pinata SDK. By uploading the token’s metadata to IPFS, we ensure that it is stored in a decentralized manner. The resulting IPFS hash (CID) is then used as part of the metadata in the token creation process. The resulting CID is saved to your .env file.
 
 Run this command to upload metadata to IPFS:
 
-```
+```shell
 node upload-metadata.js
 ```
 
-See `create-fungible-toke-with-metadata.js`
+See `create-fungible-token-with-metadata.js`
 
 This script demonstrates how to create the fungible token while linking the metadata that was previously uploaded to IPFS. The metadata is attached to the token in the form of an IPFS URI, ensuring that token holders or users of the token can access the decentralized metadata.
 
 Run this command to create the token with metadata:
 
+```shell
+node create-fungible-token-with-metadata.js
 ```
-node create-fungible-toke-with-metadata.js
+
+See `update-fungible-token-metadata.js`
+
+This script demonstrates how to update the metadata fungible token on the Hedera Testnet using the Hedera SDK. It updates metadata reference stored on IPFS. The metadata contains a reference to an updated IPFS file containing additional metadata, such as the token creator, logo, whitepaper etc.
+
+Run this command to update the token metadata:
+
+```shell
+node update-fungible-token-metadata.js
 ```
 
 
@@ -98,19 +102,17 @@ Token updated metadata: <Buffer 69 70 66 73 63 ...>
 
 ## A note on SDK version
 
-The `TokenCreateTransaction` will throw a `TypeError` when used with `setMetadata` if an older version of the SDK is used. 
+The `TokenCreateTransaction` will throw a `TypeError` when used with `setMetadata` if an older version of the SDK is used.
 
 
 ## References
 
-- [Discord: Unable to set the metadata when creating a new fungible token](https://discord.com/channels/373889138199494658/768621337865486347/1278604790670299136)  
+- [Discord: Unable to set the metadata when creating a new fungible token](https://discord.com/channels/373889138199494658/768621337865486347/1278604790670299136)
   Question on Discord about metadata during the creation of a fungible token on Hedera.
-- Fungible Token script adapted from original implementation in:  
-  [Hedera Docs: Create and Transfer your first Fungible Token](https://docs.hedera.com/hedera/tutorials/token/create-and-transfer-your-first-fungible-token)  
+- Fungible Token script adapted from original implementation in:
+  [Hedera Docs: Create and Transfer your first Fungible Token](https://docs.hedera.com/hedera/tutorials/token/create-and-transfer-your-first-fungible-token)
   Official Hedera documentation providing a step-by-step guide to creating and transferring fungible tokens.
-- [Github repo: Hedera Example HTS NFT](https://github.com/ed-marquez/hedera-example-hts-nft-blog-p1-p2-p3/blob/main/uploadJsonToIpfs.jss)  
+- [Github repo: Hedera Example HTS NFT](https://github.com/ed-marquez/hedera-example-hts-nft-blog-p1-p2-p3/blob/main/uploadJsonToIpfs.jss)
   Original uploadJsonToIpfs.js script by Ed Marquez
 - [HIP-405](https://hips.hedera.com/hip/hip-405)
 - [HIP-412](https://hips.hedera.com/hip/hip-412)
-
-

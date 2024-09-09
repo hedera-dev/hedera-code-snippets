@@ -11,7 +11,7 @@ const {
 
 const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-const tokenId = process.env.TOKEN_ID; 
+const tokenId = process.env.TOKEN_ID;
 const newMetadata = process.env.IPFS_CID;
 const metadataKey = PrivateKey.fromString(process.env.METADATA_KEY);
 
@@ -26,7 +26,7 @@ async function updateTokenMetadata(tokenId, newMetadata, metadataKey) {
 
         const tokenUpdateTx = new TokenUpdateTransaction()
             .setTokenId(tokenId)
-            .setMetadata(Buffer.from(newMetadata)) 
+            .setMetadata(Buffer.from(newMetadata))
             .freezeWith(client);
 
         const signedTokenUpdateTx = await tokenUpdateTx.sign(metadataKey);
@@ -41,9 +41,9 @@ async function updateTokenMetadata(tokenId, newMetadata, metadataKey) {
         console.log(`Token updated metadata:`, tokenInfo.metadata);
     } catch (error) {
         console.error("Error during token metadata update:", error);
-    } finally {
-        client.close();
     }
 }
 
-updateTokenMetadata(tokenId, newMetadata, metadataKey);
+updateTokenMetadata(tokenId, newMetadata, metadataKey).finally(() => {
+    client.close();
+});
