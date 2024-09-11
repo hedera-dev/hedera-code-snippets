@@ -1,0 +1,16 @@
+{
+	"name": "hts-fungible-token-with-metadata",
+	"version": "1.0.0",
+	"description": "",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@hashgraph/sdk": "^2.49.2",
+		"dotenv": "^10.0.0",
+		"node-fetch": "^3.1.0",
+		"pinata": "^0.1.10"
+	}
+}
