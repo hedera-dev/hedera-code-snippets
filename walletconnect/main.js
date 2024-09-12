@@ -5,7 +5,6 @@ import {
 } from "@hashgraph/sdk";
 import {
   DAppConnector,
-  HederaJsonRpcMethod,
   HederaSessionEvent,
   HederaChainId,
 } from "@hashgraph/hedera-wallet-connect";
@@ -14,17 +13,16 @@ import {
 let accountId = '';
 let isConnected = false;
 
-// Network configuration
 const NETWORK_CONFIG = {
   testnet: {
     network: "testnet",
-    jsonRpcUrl: "https://testnet.hedera.validationcloud.io/v1/GYSdi5Rlhc-NmoBLSVJGsqVQDOL6C4lCCQbyHc3NvsM",
+    jsonRpcUrl: `https://testnet.hedera.validationcloud.io/v1/${import.meta.env.VITE_JSON_RPC_URL}`,
     mirrorNodeUrl: "https://testnet.mirrornode.hedera.com",
     chainId: "0x128",
   },
 };
 
-const walletConnectProjectId = "377d75bb6f86a2ffd427d032ff6ea7d3";
+const walletConnectProjectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID;
 const currentNetworkConfig = NETWORK_CONFIG.testnet;
 const hederaNetwork = currentNetworkConfig.network;
 const metadata = {
@@ -34,12 +32,19 @@ const metadata = {
   icons: [window.location.origin + "/logo192.png"],
 };
 
-// Initialize WalletConnect
+
+const jsonRpcMethods = [
+  "getAccountBalance",  
+  "getTransactionReceipt",
+  "callSmartContract",
+];
+
+// Initialize WalletConnect using the explicit array of methods
 const dappConnector = new DAppConnector(
   metadata,
   hederaNetwork,
   walletConnectProjectId,
-  Object.values(HederaJsonRpcMethod),
+  jsonRpcMethods, 
   [HederaSessionEvent.ChainChanged, HederaSessionEvent.AccountsChanged],
   [HederaChainId.Testnet]
 );
@@ -55,7 +60,7 @@ const initializeWalletConnect = async () => {
 
 // Sync WalletConnect state
 function syncWalletconnectState() {
-  const account = dappConnector.signers[0]?.getAccountId()?.toString();
+  const account = dappConnector.signers?.[0]?.getAccountId()?.toString();
   if (account) {
     accountId = account;
     isConnected = true;
@@ -99,12 +104,11 @@ const disconnectWallet = async () => {
   }
 };
 
-// Update Account ID in DOM
+
 function updateAccountIdDisplay(accountId) {
   const accountIdElement = document.getElementById("accountId");
   const disconnectButton = document.getElementById("disconnectButton");
 
-  // Ensure the elements exist before trying to update them
   if (accountIdElement && disconnectButton) {
     if (accountId && accountId !== "No account connected") {
       accountIdElement.innerHTML = accountId;
@@ -127,7 +131,6 @@ const clearSessionOnLoad = () => {
   }
 }
 
-// **Token association**: Define the function before attaching the event listener
 async function handleTokenAssociation() {
   const tokenId = document.getElementById('associateTokenId').value;
   if (!tokenId) {
@@ -140,9 +143,13 @@ async function handleTokenAssociation() {
       .setAccountId(AccountId.fromString(accountId))
       .setTokenIds([TokenId.fromString(tokenId)]);
 
-    const signer = dappConnector.signers[0];
+    const signer = dappConnector.signers?.[0];
 
-    // Freeze and execute with the signer
+    if (!signer) {
+      console.error('No signer available.');
+      return;
+    }
+
     await associateTokenTransaction.freezeWithSigner(signer);
     const txResult = await associateTokenTransaction.executeWithSigner(signer);
     console.log(`Token ${tokenId} associated successfully.`);
@@ -151,7 +158,7 @@ async function handleTokenAssociation() {
   }
 }
 
-// **Ensure the DOM is fully loaded before attaching event listeners**
+// Ensure the DOM is fully loaded before attaching event listeners
 document.addEventListener('DOMContentLoaded', async () => {
   await initializeWalletConnect();
 
