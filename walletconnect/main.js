@@ -5,6 +5,7 @@ import {
 } from "@hashgraph/sdk";
 import {
   DAppConnector,
+  HederaJsonRpcMethod,
   HederaSessionEvent,
   HederaChainId,
 } from "@hashgraph/hedera-wallet-connect";
@@ -32,19 +33,12 @@ const metadata = {
   icons: [window.location.origin + "/logo192.png"],
 };
 
-
-const jsonRpcMethods = [
-  "getAccountBalance",  
-  "getTransactionReceipt",
-  "callSmartContract",
-];
-
 // Initialize WalletConnect using the explicit array of methods
 const dappConnector = new DAppConnector(
   metadata,
   hederaNetwork,
   walletConnectProjectId,
-  jsonRpcMethods, 
+  Object.values(HederaJsonRpcMethod),
   [HederaSessionEvent.ChainChanged, HederaSessionEvent.AccountsChanged],
   [HederaChainId.Testnet]
 );
@@ -104,6 +98,21 @@ const disconnectWallet = async () => {
   }
 };
 
+// Check and restore session on page load
+const restoreSessionOnLoad = async () => {
+  await initializeWalletConnect();
+
+  // Check if there are any connected signers to determine session restoration
+  const hasActiveSession = dappConnector.signers?.length > 0;
+  
+  if (hasActiveSession) {
+    console.log("Restoring existing WalletConnect session...");
+    syncWalletconnectState();
+  } else {
+    console.log("No existing WalletConnect session found.");
+    updateAccountIdDisplay("No account connected");
+  }
+}
 
 function updateAccountIdDisplay(accountId) {
   const accountIdElement = document.getElementById("accountId");
@@ -122,15 +131,7 @@ function updateAccountIdDisplay(accountId) {
   }
 }
 
-// Clear session on page load
-const clearSessionOnLoad = () => {
-  if (isConnected) {
-    dappConnector.disconnectAll();
-    isConnected = false;
-    updateAccountIdDisplay("No account connected");
-  }
-}
-
+// Handle token association
 async function handleTokenAssociation() {
   const tokenId = document.getElementById('associateTokenId').value;
   if (!tokenId) {
@@ -160,12 +161,8 @@ async function handleTokenAssociation() {
 
 // Ensure the DOM is fully loaded before attaching event listeners
 document.addEventListener('DOMContentLoaded', async () => {
-  await initializeWalletConnect();
+  await restoreSessionOnLoad(); // Restore session on page load
 
-  // Clear session on load
-  clearSessionOnLoad();
-
-  // Ensure the buttons exist before adding event listeners
   const disconnectButton = document.getElementById('disconnectButton');
   const associateButton = document.getElementById('associateButton');
 
