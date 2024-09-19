@@ -10,8 +10,23 @@ Ideal for anyone looking to understand the basics of wallet integrations or trou
 Note: This code snipped is a stripped down version of the Hedera Vanilla JS dApp Template.
 
 
-## How To
-Run these commands to run the program:
+## Prerequisites
+
+  - You will need to setup a JSON RPC URL for this codesnippet. If you don't already have one, please follow this tutorial (the easiest option is Hashio):
+
+    https://docs.hedera.com/hedera/tutorials/more-tutorials/json-rpc-connections 
+
+  - You also will need a Wallet Connect Project Id. This can be acquired from:
+  https://cloud.walletconnect.com/sign-up
+
+
+## How to
+
+1) Rename .env.example to .env
+
+2) Update the .env file with a JSON_RPC_URL and WALLET_CONNECT_PROJECT_ID. 
+
+3) Run these commands to run the program:
 ```
 npm install
 ```
