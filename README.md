@@ -34,6 +34,7 @@ See: [sscce.org](http://sscce.org/)
 - BIP39 Create Accounts: [`bip39-create-accounts`](./bip39-create-accounts/)
 - HCS Topic Permissioned Write: [`hcs-topic-permissioned-write`](./hcs-topic-permissioned-write/)
 - HTS Fungible Token Creation & Update with Metadata, inc. IPFS upload script [`hts-fungible-token-metadata`](./hts-fungible-token-metadata/)
+- Unlimited Max Automatic Token Associations: [`unlimited-max-auto-associations-js-sdk`](./unlimimted-max-auto-associations-js-sdk/)
 
 ## Contributing
 
