@@ -5,7 +5,7 @@ This code snippet aims to show users how to easily deploy, mint and transfer ERC
 
 ## Prerequisites
 
-  You will need to use Remix IDE to compile the Token.sol contract and to retrieve the bytecode.
+You will need to use Remix IDE to compile the Token.sol contract and to retrieve the bytecode.
 
 1. Head to https://remix.ethereum.org
 2. Copy Token.sol into the contracts directory:
@@ -17,6 +17,8 @@ This code snippet aims to show users how to easily deploy, mint and transfer ERC
 5. Compile the code
 6. Copy bytecode:
 ![img](img/copybytecode.png)
+
+To see the mint the Tokens, you will need an EVM address, and to see them you'll need a wallet like Metamask.
 
 
 ## How to
@@ -41,6 +43,13 @@ node deployERC20.js
 ```
 node mintTokensToWallet.js
 ```
+
+3) to see the tokens in your Metamask wallet, you need to import the token. Navigate to Metamask and click "Import Token":
+![img](img/importinwallet.png)
+
+4) Past in the Token contract EVM address (can be found in Hashscan)
+
+5) Give the Token a name (here: HTT) and see them appear in your wallet.
 
 
 ## Code
