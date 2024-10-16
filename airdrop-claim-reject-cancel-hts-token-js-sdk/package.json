@@ -1,0 +1,17 @@
+{
+	"name": "hedera-example-hts-airdrops-hip-904",
+	"version": "1.0.0",
+	"description": "",
+	"main": "airdrop.js",
+	"type": "module",
+	"scripts": {
+		"start": "node airdrop.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@hashgraph/sdk": "^2.51.0",
+		"dotenv": "^16.4.5"
+	}
+}

@@ -6,6 +6,7 @@ See: [sscce.org](http://sscce.org/)
 
 ## Snippets
 
+- Airdrop, claim, reject, and cancel HTS Fungible Tokens Using the JS SDK: [`airdrop-claim-reject-cancel-hts-token-js-sdk`](./airdrop-claim-reject-cancel-hts-token-js-sdk/)
 - Associate token using JS SDK: [`associate-token-js-sdk`](./associate-token-js-sdk/)
 - Associate token using ethers.js & Metamask: [`associate-token-via-ethers`](./associate-token-via-ethers/)
 - Check if an account is associated to a token using JS SDK: [`is-associated-js`](./is-associated-js/)
