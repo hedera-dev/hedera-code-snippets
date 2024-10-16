@@ -22,12 +22,17 @@ Copy the `.env.sample` file and rename it to `.env`:
 cp .env.sample .env
 ```
 
-Run the aridrop example:
+Run the airdrop example with any of the following:
 
 ```
 node airdrop.js
 ```
-
+```
+npm start
+```
+```
+npm run start
+```
 ### Console Output
 
 ```
