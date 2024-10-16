@@ -46,6 +46,7 @@ export async function transferFtFcn(tId, senderId, receiverId, amount, senderKey
 
 export async function mintNftSerialsFcn(supplyKey, client) {
 	// // MINT NEW BATCH OF NFTs
+	// Replace IPFS CID with your own
 	const CID = [
 		Buffer.from("ipfs://QmNPCiNA3Dsu3K5FxDPMG5Q3fZRwVTg14EXA92uqEeSRXn"),
 		Buffer.from("ipfs://QmZ4dgAgt8owvnULxnKxNe8YqpavtVCXmc1Lt2XajFpJs9"),

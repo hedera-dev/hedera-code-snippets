@@ -30,7 +30,52 @@ node airdrop.js
 
 ### Console Output
 
-![alt text](./img/console-output.png)
+```
+- Treasury's account: https://hashscan.io/testnet/account/0.0.4996900
+- Alice's account: https://hashscan.io/testnet/account/0.0.4996901
+- Bob's account: https://hashscan.io/testnet/account/0.0.4996902
+- Carol's account: https://hashscan.io/testnet/account/0.0.4996903
+- Dave's account: https://hashscan.io/testnet/account/0.0.4996904
+
+- Created FT with Token ID: 0.0.4996905
+- See: https://hashscan.io/testnet/token/0.0.4996905
+- See: https://hashscan.io/testnet/transaction/0.0.2212547@1729113747.140597330
+
+- Treasury TokenAirdropTransaction status: SUCCESS
+- See: https://hashscan.io/testnet/transaction/0.0.2212547@1729113752.639188097
+
+- Bob TokenClaimAirdropTransaction status: SUCCESS
+- See: https://hashscan.io/testnet/transaction/0.0.2212547@1729113752.729228451
+
+- Alice balance check after performing the airdrop
+- Balance of account 0.0.4996901: 1 ℏ + 1 unit(s) of token 0.0.4996905
+
+- Bob balance check after claiming the airdrop
+- Balance of account 0.0.4996902: 1 ℏ + 2 unit(s) of token 0.0.4996905
+
+- Carol balance check after performing the airdrop
+- Balance of account 0.0.4996903: 1 ℏ + 3 unit(s) of token 0.0.4996905
+
+- Dave balance check after performing the airdrop
+- Balance of account 0.0.4996904: 1 ℏ + undefined unit(s) of token 0.0.4996905
+
+- Carol TokenRejectTransaction status: SUCCESS
+- See: https://hashscan.io/testnet/transaction/0.0.2212547@1729113754.687096165
+
+- Carol balance check after rejecting the airdrop
+- Balance of account 0.0.4996903: 1 ℏ + 0 unit(s) of token 0.0.4996905
+
+- Treasury TokenCancelAirdropTransaction status: SUCCESS
+- See: https://hashscan.io/testnet/transaction/0.0.2212547@1729113756.181206314
+
+- Dave balance check after canceling the airdrop
+- Balance of account 0.0.4996904: 1 ℏ + undefined unit(s) of token 0.0.4996905
+
+ THE END ============================================================
+
+- 👇 Go to:
+- 🔗 www.hedera.com/discord
+```
 
 ## Features Demonstrated
 
@@ -45,30 +90,18 @@ node airdrop.js
 ## Flow Overview
 
 1. **Set Up**:
-
    - Load credentials and connect to the Hedera network.
    - Create accounts for Treasury, Alice, Bob, Carol, and Dave.
-
 2. **Token Creation**:
-
    - Treasury creates a token and becomes the token administrator.
-
 3. **Airdrop Tokens**:
-
    - Treasury airdrops tokens to Alice, Bob, Carol, and Dave.
-
 4. **Bob Claims Airdrop**:
-
    - Bob claims his airdropped tokens successfully.
-
 5. **Carol Rejects Airdrop**:
-
    - Carol rejects her airdropped tokens, sending them back to the Treasury.
-
 6. **Cancel Airdrop for Dave**:
-
    - Treasury cancels Dave's pending airdrop.
-
 7. **Balance Checks**:
    - Check balances for all accounts to reflect the result of claims, rejections, and cancellations.
 

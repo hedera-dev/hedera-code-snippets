@@ -37,23 +37,23 @@ async function main() {
 	const infAutoAssociations = -1;
 
 	const treasuryKey = PrivateKey.generateECDSA();
-	const [treasurySt, treasuryId] = await accountCreateFcn(treasuryKey, initBalance, noAutoAssociations, client);
+	const [treasuryStatus, treasuryId] = await accountCreateFcn(treasuryKey, initBalance, noAutoAssociations, client);
 	console.log(`- Treasury's account: https://hashscan.io/${network}/account/${treasuryId}`);
 
 	const aliceKey = PrivateKey.generateECDSA();
-	const [aliceSt, aliceId] = await accountCreateFcn(aliceKey, initBalance, infAutoAssociations, client);
+	const [aliceStatus, aliceId] = await accountCreateFcn(aliceKey, initBalance, infAutoAssociations, client);
 	console.log(`- Alice's account: https://hashscan.io/${network}/account/${aliceId}`);
 
 	const bobKey = PrivateKey.generateECDSA();
-	const [bobSt, bobId] = await accountCreateFcn(bobKey, initBalance, noAutoAssociations, client);
+	const [bobStatus, bobId] = await accountCreateFcn(bobKey, initBalance, noAutoAssociations, client);
 	console.log(`- Bob's account: https://hashscan.io/${network}/account/${bobId}`);
 
 	const carolKey = PrivateKey.generateECDSA();
-	const [carolSt, carolId] = await accountCreateFcn(carolKey, initBalance, fiveAutoAssociations, client);
+	const [carolStatus, carolId] = await accountCreateFcn(carolKey, initBalance, fiveAutoAssociations, client);
 	console.log(`- Carol's account: https://hashscan.io/${network}/account/${carolId}`);
 
 	const daveKey = PrivateKey.generateECDSA();
-	const [daveSt, daveId] = await accountCreateFcn(daveKey, initBalance, noAutoAssociations, client);
+	const [daveStatus, daveId] = await accountCreateFcn(daveKey, initBalance, noAutoAssociations, client);
 	console.log(`- Dave's account: https://hashscan.io/${network}/account/${daveId}`);
 
 	// GENERATE KEYS TO MANAGE FUNCTIONAL ASPECTS OF THE TOKEN

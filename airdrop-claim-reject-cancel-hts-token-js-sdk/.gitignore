@@ -1,12 +1,3 @@
 /.env
-/accountCreate.js
-/accountCreator.js
-/accountUpdater.js
-/autoAssociateTut.js
-/file.json
-/index1.js
-/index2.js
-/index3.js
 /node_modules
-/test.js
-/test2.js
+/.DS_Store
