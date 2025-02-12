@@ -20,6 +20,17 @@ Subsequently a couple of RPCs are invoked to obtain the block number,
 and the HBAR balance of a specified account.
 These are simply to verify that the connection works properly.
 
+## Additional Scripts
+
+- **`deploy-contract.js`**  
+  Deploy a smart contract via viem
+
+- **`read-contract.js`**  
+  Demonstrates how to call a read-only function on a deployed contract (e.g. `get_message`) using Viem’s `readContract`. This uses the JSON-RPC method `eth_call`, which is supported on Hashio.
+
+- **`subscribe-to-event.js`**  
+  Illustrates how to listen for contract events/logs in real time using `watchContractEvent`. This periodically checks for new logs matching the given ABI event. Note that your contract must actually emit events for any logs to appear. If the node’s log support is partial, event subscription may be limited in functionality. 
+
 ## References
 
 - [How can I connect to Hedera Testnet using web3.js or ethers.js? (Stackoverflow)](https://stackoverflow.com/a/77912632/194982)
