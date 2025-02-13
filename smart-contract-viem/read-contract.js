@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { createPublicClient, http } from 'viem'
-import { hederaTestnetChain } from './hederaTestnet.js'
+import { hederaTestnet } from 'viem/chains';
 import { myContract } from './contract.js'
 
 const { CONTRACT_ADDRESS } = process.env
@@ -9,7 +9,7 @@ if (!CONTRACT_ADDRESS) {
 }
 
 const publicClient = createPublicClient({
-  chain: hederaTestnetChain,
+  chain: hederaTestnet,
   transport: http(),
 })
 

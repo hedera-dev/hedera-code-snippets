@@ -6,16 +6,15 @@ using Viem.
 ## Code
 
 Copy the `.env.example` file to `.env`,
-then edit it to add the URL for a JSON-RPC endpoint for Hedera Testnet.
+then edit it to add the URL for a JSON-RPC endpoint for Hedera Testnet, as well as a private key for an already funded account on the Hedera Testnet. 
 
-To obtain this URL, see the [JSON-RPC connections documentation](https://docs.hedera.com/hedera/tutorials/more-tutorials/json-rpc-connections/).
+To obtain this URL, see the [JSON-RPC connections documentation](https://docs.hedera.com/hedera/tutorials/more-tutorials/json-rpc-connections/). To obtain the account, you can register in the [Hedera Portal](https://portal.hedera.com/).
 
-In the `hederaTestnet.js` file in this directory, a `hederaTestnetChain` is being created.
-This is essentially configuration for the RPC connection.
-
-The `HelloHedera.sol` file in this directory is the test solidity smart contract to be deployed/read from. `contract.js` is the related ABI.
+The `HelloHedera.sol` file in this directory is the test solidity smart contract to be deployed/read from. `contract.js` is the related ABI and bytecode.
 
 Subsequently a couple of RPCs can be invoked to deploy a contract (`deploy-contract.js`), read from a contract (`read-contract.js`) and subscribe to an event (`subscribe-to-event.js`).
+
+For `read-contract.js` to work, the contract has to be deployed first. After deployment, the resulting `CONTRACT_ADDRESS` should be added to the .env file.
 
 ## Scripts
 

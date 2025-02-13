@@ -1,18 +1,18 @@
 import 'dotenv/config'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { hederaTestnetChain } from './hederaTestnet.js'
+import { hederaTestnet } from 'viem/chains';
 import { myContract } from './contract.js'
 
 const { PRIVATE_KEY } = process.env
 
 const publicClient = createPublicClient({
-  chain: hederaTestnetChain,
+  chain: hederaTestnet,
   transport: http(),
 })
 
 const walletClient = createWalletClient({
-  chain: hederaTestnetChain,
+  chain: hederaTestnet,
   transport: http(),
   account: privateKeyToAccount(PRIVATE_KEY),
 })
