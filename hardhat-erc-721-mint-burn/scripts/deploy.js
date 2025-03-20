@@ -7,7 +7,7 @@ async function main() {
     const MyToken = await ethers.getContractFactory("MyToken", deployer);
     const contract = await MyToken.deploy(deployer.address);
   
-    console.log("Contract deployed at:", contract.address);
+    console.log("Contract deployed at:", contract.target);
   }
   
 main().catch(console.error);
