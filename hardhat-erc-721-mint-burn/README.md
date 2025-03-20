@@ -1,5 +1,9 @@
 # How to use this example?
 
+0. .env file
+
+Provide your **[HEX ENCODED PRIVATE KEY](https://portal.hedera.com/)** for your **ECDSA account** in the .env file and provide a JSON RPC URL. You can use the [Hashio JSON RPC for testnet](https://www.hashgraph.com/hashio/).
+
 1. Install dependencies:
 
 ```bash
