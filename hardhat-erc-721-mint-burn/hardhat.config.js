@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("@nomiclabs/hardhat-waffle");
+require("@nomicfoundation/hardhat-toolbox");
 
 module.exports = {
   solidity: {
@@ -10,6 +10,12 @@ module.exports = {
         runs: 500,
       },
     },
+  },
+  paths: {
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts",
   },
   defaultNetwork: "testnet",
   networks: {
