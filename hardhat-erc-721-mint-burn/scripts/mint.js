@@ -18,7 +18,7 @@ async function main() {
 
   // Check the balance of the token
   const balance = await contract.balanceOf(deployer.address);
-  console.log("Balance:", balance.toString(), "NFTs");
+  console.log("Balance:", balance.toString(), "NFT");
 }
 
 main().catch(console.error);
