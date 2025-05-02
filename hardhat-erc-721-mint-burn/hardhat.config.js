@@ -3,7 +3,7 @@ require("@nomicfoundation/hardhat-toolbox");
 
 module.exports = {
   solidity: {
-    version: "^0.8.22",
+    version: "0.8.22",
     settings: {
       optimizer: {
         enabled: true,
