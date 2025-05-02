@@ -9,6 +9,7 @@
 1. [Setup](#setup)
 2. [Tutorial Part 1: Deploy an ERC-721 contract - Mint and Burn a token](#tutorial-part-1-deploy-an-erc-721-contract---mint-and-burn-a-token)
 3. [Tutorial Part 2: Access Control, Token URI, pause, and transfer](#tutorial-part-2-access-control-token-uri-pause-and-transfer)
+4. [Tutorial Part 3: UUPS Upgradeable Proxy Pattern](#tutorial-part-3-uups-upgradeable-proxy-pattern)
 
 # Setup
 
@@ -90,3 +91,28 @@ npx hardhat run scripts/transfer-advanced.js --network testnet
 ```
 
 That's it! You have deployed an ERC-721 contract with access control, token URI, pause, and transfer functionality.
+
+# Tutorial Part 3: UUPS Upgradeable Proxy Pattern
+
+### 1. Recompile the contract:
+
+```bash
+npx hardhat compile
+```
+
+### 2. Run the "deploy-upgradeable.js" script:
+
+This script deploys the contract using the UUPS upgradeable proxy pattern. Make sure to copy the contract address, you'll need it for the next step.
+
+```bash
+npx hardhat run scripts/deploy-upgradeable.js --network testnet
+```
+
+### 3. Upgrade the contract and verify it
+
+This script upgrades the contract to a new version. Make sure to replace the contract address in the script with the one you copied from the previous step. Once the upgrade is complete, the script calls the `version()` function to verify the upgrade.
+
+```bash
+npx hardhat run scripts/upgrade.js --network testnet
+```
+
