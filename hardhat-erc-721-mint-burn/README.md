@@ -1,7 +1,8 @@
 # Tutorials on Hedera Docs
 
 - [Part 1: How to mint and burn an ERC721 token using Hardhat and Ethers](https://docs.hedera.com/hedera/tutorials/smart-contracts/how-to-mint-and-burn-an-erc-721-token-using-hardhat-and-ethers-part-1) **([Video Tutorial](https://www.youtube.com/watch?v=B23aVhaCARU))**
-- [Part 2: How to Set Access Control, a Token URI, Pause, and Transfer an ERC-721 Token Using Hardhat](https://docs.hedera.com/hedera/tutorials/smart-contracts/how-to-set-access-control-a-token-uri-pause-and-transfer-an-erc-721-token-using-hardhat-part-2)
+- [Part 2: How to Set Access Control, a Token URI, Pause, and Transfer an ERC-721 Token Using Hardhat](https://docs.hedera.com/hedera/tutorials/smart-contracts/how-to-set-access-control-a-token-uri-pause-and-transfer-an-erc-721-token-using-hardhat-part-2) **([Video Tutorial](https://www.youtube.com/watch?v=UBlppu3sJVg&list=PLcaTa5RR9SuA__8rzCKru8Y_F6iMJPEUD&index=25))**
+- [Part 3: How to Upgrade an ERC-721 Token Using the UUPS Proxy Pattern](https://docs.hedera.com/hedera/tutorials/smart-contracts/how-to-upgrade-an-erc-721-token-with-openzeppelin-uups-proxies-and-hardhat-part-3) **([Video Tutorial](https://www.youtube.com/watch?v=vI-9WTFMy7U))**
 
 # How to use this example?
 
