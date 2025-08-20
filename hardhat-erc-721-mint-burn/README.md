@@ -41,19 +41,32 @@ npm install
 npx hardhat build
 ```
 
-### 2. Run the "deploy.ts" script:
+### 2. Run tests
+
+```bash
+npx hardhat test
+```
+
+You can also run tests individually with either of these
+
+```bash
+npx hardhat test solidity
+npx hardhat test mocha
+```
+
+### 3. Run the "deploy.ts" script:
 
 ```bash
 npx hardhat run scripts/deploy.ts --network testnet
 ```
 
-### 3. Mint a token
+### 4. Mint a token
 
 ```bash
 npx hardhat run scripts/mint.ts --network testnet
 ```
 
-### 4. Burn a token
+### 5. Burn a token
 
 ```bash
 npx hardhat run scripts/burn.ts --network testnet
@@ -69,7 +82,20 @@ That's it! You have deployed an ERC-721 contract, minted a token, and burned a t
 npx hardhat build
 ```
 
-### 2. Run the "deploy-advanced.ts" script:
+### 2. Run tests
+
+```bash
+npx hardhat test
+```
+
+You can also run tests individually with either of these
+
+```bash
+npx hardhat test solidity
+npx hardhat test mocha
+```
+
+### 3. Run the "deploy-advanced.ts" script:
 
 ```bash
 npx hardhat run scripts/deploy-advanced.ts --network testnet
@@ -77,19 +103,19 @@ npx hardhat run scripts/deploy-advanced.ts --network testnet
 
 > Don't forget to copy the contract address and replace this address in the other `...-advanced.ts` scripts.
 
-### 3. Mint a token with Token URI set
+### 4. Mint a token with Token URI set
 
 ```bash
 npx hardhat run scripts/mint-advanced.ts --network testnet
 ```
 
-### 4. Pause the contract
+### 5. Pause the contract
 
 ```bash
 npx hardhat run scripts/pause-advanced.ts --network testnet
 ```
 
-### 5. Unpause and transfer a token
+### 6. Unpause and transfer a token
 
 ```bash
 npx hardhat run scripts/transfer-advanced.ts --network testnet
