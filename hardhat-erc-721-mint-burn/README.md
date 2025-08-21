@@ -123,7 +123,7 @@ npx hardhat run scripts/transfer-advanced.ts --network testnet
 
 That's it! You have deployed an ERC-721 contract with access control, token URI, pause, and transfer functionality.
 
-# Tutorial Part 3: UUPS Upgradeable Proxy Pattern(In Progress)
+# Tutorial Part 3: UUPS Upgradeable Proxy Pattern
 
 ### 1. Rebuild the contract:
 
@@ -131,18 +131,31 @@ That's it! You have deployed an ERC-721 contract with access control, token URI,
 npx hardhat build
 ```
 
-### 2. Run the "deploy-upgradeable.ts" script:
+### 2. Run tests
 
-This script deploys the contract using the UUPS upgradeable proxy pattern. Make sure to copy the contract address, you'll need it for the next step.
+```bash
+npx hardhat test
+```
+
+You can also run tests individually with either of these
+
+```bash
+npx hardhat test solidity
+npx hardhat test mocha
+```
+
+### 3. Run the "deploy-upgradeable.ts" script:
+
+This script deploys the contract using the UUPS upgradeable proxy pattern. Make sure to copy the proxy address, you'll need it for the next step.
 
 ```bash
 npx hardhat run scripts/deploy-upgradeable.ts --network testnet
 ```
 
-### 3. Upgrade the contract and verify it
+### 4. Upgrade the contract and verify it
 
-This script upgrades the contract to a new version. Make sure to replace the contract address in the script with the one you copied from the previous step. Once the upgrade is complete, the script calls the `version()` function to verify the upgrade.
+This script upgrades the contract to a new version. Make sure to replace the proxy address in the script with the one you copied from the previous step. Once the upgrade is complete, the script calls the `version()` function to verify the upgrade.
 
 ```bash
-npx hardhat run scripts/upgrade.ts --network testnet
+npx hardhat run scripts/upgrade-upgradeable.ts --network testnet
 ```
