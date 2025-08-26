@@ -1,5 +1,5 @@
 {
-  "name": "hardhat-erc-721-mint-burn",
+  "name": "tutorial-local-hardhat",
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
@@ -9,16 +9,12 @@
     "@types/chai": "^4.3.20",
     "@types/chai-as-promised": "^8.0.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.17.2",
-    "chai": "^5.3.1",
+    "@types/node": "^22.17.1",
+    "chai": "^5.2.1",
     "ethers": "^6.15.0",
     "forge-std": "github:foundry-rs/forge-std#v1.9.4",
     "hardhat": "^3.0.0",
     "mocha": "^11.7.1",
     "typescript": "~5.8.0"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts": "^5.4.0",
-    "@openzeppelin/contracts-upgradeable": "^5.4.0"
   }
 }

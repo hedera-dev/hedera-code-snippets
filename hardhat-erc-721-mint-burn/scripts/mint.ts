@@ -1,5 +1,10 @@
+import { network } from "hardhat";
+
+const { ethers } = await network.connect({
+  network: "testnet"
+});
+
 async function main() {
-  // Get the signer of the tx and address for minting the token
   const [deployer] = await ethers.getSigners();
 
   // Get the ContractFactory of your MyToken ERC-721 contract
@@ -7,18 +12,19 @@ async function main() {
 
   // Connect to the deployed contract
   // (REPLACE WITH YOUR CONTRACT ADDRESS)
-  const contractAddress = "0xf328dEfC4a28092b9134a8095B752C7d67dCCaA8";
-  const contract = await MyToken.attach(contractAddress);
+  const contractAddress = "0x00f2753A689C3bdd1a733430c7b63A3993B1eFBc";
+  const contract = MyToken.attach(contractAddress);
 
   // Mint a token to ourselves
   const mintTx = await contract.safeMint(deployer.address);
   const receipt = await mintTx.wait();
-  const mintedTokenId = receipt.logs[0].topics[3];
+  console.log("receipt: ", JSON.stringify(receipt, null, 2));
+  const mintedTokenId = receipt?.logs[0].topics[3];
   console.log("Minted token ID:", mintedTokenId);
 
   // Check the balance of the token
   const balance = await contract.balanceOf(deployer.address);
-  console.log("Balance:", balance.toString(), "NFT");
+  console.log("Balance:", balance.toString(), "NFTs");
 }
 
 main().catch(console.error);

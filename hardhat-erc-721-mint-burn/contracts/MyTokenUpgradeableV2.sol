@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.28;
 
-import "./erc-721-upgrade.sol";
+import {MyTokenUpgradeable} from "./MyTokenUpgradeable.sol";
 
 contract MyTokenUpgradeableV2 is MyTokenUpgradeable {
-
-    // New function for demonstration
+    // Example new function to verify the upgrade worked
     function version() public pure returns (string memory) {
         return "v2";
     }
