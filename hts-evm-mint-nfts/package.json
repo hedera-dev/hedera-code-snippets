@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
-    "@hashgraph/smart-contracts": "github:hashgraph/hedera-smart-contracts",
     "@nomicfoundation/hardhat-ignition": "^3.0.0",
     "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^3.0.0",
     "@types/chai": "^4.3.20",
@@ -18,6 +17,7 @@
     "typescript": "~5.8.0"
   },
   "dependencies": {
+    "@hashgraph/smart-contracts": "github:hashgraph/hedera-smart-contracts",
     "@openzeppelin/contracts": "^5.4.0"
   }
 }
