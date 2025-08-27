@@ -7,7 +7,7 @@ async function main() {
   const [signer] = await ethers.getSigners();
   console.log("Using signer:", signer.address);
 
-  const contractAddress = "0xb0B9fbBA55f40406ef47e6863C5e8421C5b6796B";
+  const contractAddress = "0xE93E01fEe6Aaf79302bb92c76cD5ee8FE88371Ff";
   const recipient = signer.address;
 
   const contract = await ethers.getContractAt(
