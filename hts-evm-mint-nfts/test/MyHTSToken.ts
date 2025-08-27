@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { network } from "hardhat";
-import { ZeroAddress, ContractTransactionResponse } from "ethers";
+import { ContractTransactionResponse } from "ethers";
 
 const { ethers } = await network.connect({ network: "testnet" });
 
@@ -60,21 +60,23 @@ describe("MyHTSToken (Hedera testnet)", function () {
     const wrapperAddr = myHTSToken.target.toLowerCase();
     mintedTokenId = 0n;
 
-    for (const log of rcpt.logs ?? []) {
-      if (log.address.toLowerCase() !== wrapperAddr) continue;
-      try {
-        const parsed = myHTSToken.interface.parseLog({
-          topics: log.topics,
-          data: log.data
-        });
-        if (parsed && parsed.name === "NFTMinted") {
-          const tok = parsed.args[1];
-          mintedTokenId =
-            typeof tok === "bigint" ? tok : BigInt(tok.toString());
-          break;
+    if (rcpt && rcpt.logs) {
+      for (const log of rcpt.logs) {
+        if (log.address.toLowerCase() !== wrapperAddr) continue;
+        try {
+          const parsed = myHTSToken.interface.parseLog({
+            topics: log.topics,
+            data: log.data
+          });
+          if (parsed && parsed.name === "NFTMinted") {
+            const tok = parsed.args[1];
+            mintedTokenId =
+              typeof tok === "bigint" ? tok : BigInt(tok.toString());
+            break;
+          }
+        } catch {
+          // Not a wrapper event; ignore
         }
-      } catch {
-        // Not a wrapper event; ignore
       }
     }
 

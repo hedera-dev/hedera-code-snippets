@@ -1,120 +1,57 @@
-# HTS x EVM - NFTs on Hedera
+# Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
 
-This repository demonstrates how to create and manage NFTs on the Hedera network using smart contracts that leverage both the Hedera Token Service (HTS) and EVM capabilities. The project is structured as a three-part series, each focusing on different aspects of NFT management.
+This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
+
+To learn more about the Hardhat 3 Beta, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3 Beta](https://hardhat.org/hardhat3-beta-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
 
 ## Project Overview
 
-The repository contains three main smart contracts with corresponding test suites:
+This example project includes:
 
-1. **Part 1: Basic NFT Minting (`1-MintNFT.sol`)**
-   - Demonstrates basic NFT creation and minting
-   - Shows how to interact with Hedera Token Service
-   - Basic token management operations
+- A simple Hardhat configuration file.
+- Foundry-compatible Solidity unit tests.
+- TypeScript integration tests using `mocha` and ethers.js
+- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
 
-2. **Part 2: KYC and NFT Updates (`2-KYCandUpdateNFT.sol`)**
-   - Implements KYC (Know Your Customer) functionality
-   - Shows how to update NFT metadata and properties
-   - Demonstrates token management with KYC requirements
+## Usage
 
-3. **Part 3: Advanced Token Controls (`3-PauseFreezeWipeDelete.sol`)**
-   - Implements token pause functionality
-   - Demonstrates account freeze capabilities
-   - Shows how to wipe tokens from accounts
-   - Handles token deletion
+### Running Tests
 
-## Prerequisites
+To run all the tests in the project, execute the following command:
 
-- Node.js (v16 or later)
-- npm or yarn package manager
-- A Hedera ECDSA testnet account with test HBAR
-
-## Environment Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/hedera-dev/hts-evm-hybrid-mint-nfts.git
-   cd hts-evm-hybrid-mint-nfts
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Configure environment variables:
-   - Copy `.env.example` to `.env`
-   ```bash
-   cp .env.example .env
-   ```
-   - Fill in the following ECDSA private key variables in `.env`:
-     - `PRIVATE_KEY`: Your Hedera account's private key
-     - `PRIVATE_KEY_2`: Secondary account private key for testing
-
-## Project Structure
-
-```
-├── contracts/
-│   ├── 1-MintNFT.sol
-│   ├── 2-KYCandUpdateNFT.sol
-│   ├── 3-PauseFreezeWipeDelete.sol
-│   └── hedera/
-│       ├── HederaTokenService.sol
-│       ├── IHederaTokenService.sol
-│       ├── KeyHelper.sol
-│       └── HederaResponseCodes.sol
-├── test/
-│   ├── 1-MintNFT.ts
-│   ├── 2-KYCandUpdateNFT.ts
-│   └── 3-PauseFreezeWipeDelete.ts
-```
-
-## Running Tests
-
-Each part of the series has its own test suite. You can run them individually or all at once.
-
-Run all tests:
-```bash
+```shell
 npx hardhat test
 ```
 
-Run specific test suites:
-```bash
-# Part 1: Basic NFT Minting
-npx hardhat test test/1-MintNFT.ts
+You can also selectively run the Solidity or `mocha` tests:
 
-# Part 2: KYC and NFT Updates
-npx hardhat test test/2-KYCandUpdateNFT.ts
-
-# Part 3: Advanced Token Controls
-npx hardhat test test/3-PauseFreezeWipeDelete.ts
+```shell
+npx hardhat test solidity
+npx hardhat test mocha
 ```
 
-To see gas usage reports, prefix any test command with `REPORT_GAS=true`:
-```bash
-REPORT_GAS=true npx hardhat test
+### Make a deployment to Sepolia
+
+This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
+
+To run the deployment to a local chain:
+
+```shell
+npx hardhat ignition deploy ignition/modules/Counter.ts
 ```
 
-## Development
+To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
 
-This project uses Hardhat as the development environment. Common Hardhat tasks are available:
+You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
 
-```bash
-npx hardhat help
-npx hardhat compile
-npx hardhat clean
-npx hardhat node
+To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
+
+```shell
+npx hardhat keystore set SEPOLIA_PRIVATE_KEY
 ```
 
-## Dependencies
+After setting the variable, you can run the deployment with the Sepolia network:
 
-- `@hashgraph/sdk`: Hedera JavaScript SDK
-- `@openzeppelin/contracts`: Smart contract library
-- `@nomicfoundation/hardhat-toolbox`: Hardhat development tools
-- `hardhat`: Ethereum development environment
-- `dotenv`: Environment variable management
-
-
-
-
-------------------
-npm i -D "github:hashgraph/hedera-smart-contracts"
+```shell
+npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
+```
