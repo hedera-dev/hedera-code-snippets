@@ -22,7 +22,7 @@ import {KeyHelper} from "@hashgraph/smart-contracts/contracts/system-contracts/h
  * - Holders use the token’s ERC721 facade directly (SDK or EVM).
  * - Royalty: 10% with 1 HBAR fallback to initialOwner.
  */
-contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
+contract MyHTSTokenKYC is HederaTokenService, KeyHelper, Ownable {
     // Underlying HTS NFT token EVM address (set during initialize. This is the "ERC721-like" token)
     address public tokenAddress;
 
@@ -41,6 +41,9 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
         int64 newTotalSupply
     );
     event NFTBurned(uint256 indexed tokenId, int64 newTotalSupply);
+    event KYCGranted(address account);
+    event KYCRevoked(address account);
+    event KYCKeyUpdated(bytes newKey);
     event HBARReceived(address indexed from, uint256 amount);
     event HBARFallback(address sender, uint256 amount, bytes data);
     event HBARWithdrawn(address indexed to, uint256 amount);
@@ -74,9 +77,9 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
         token.treasury = address(this);
         token.memo = "";
 
-        // Keys: SUPPLY + ADMIN -> contractId
+        // Keys: SUPPLY + ADMIN + KYC -> contractId
         IHederaTokenService.TokenKey[]
-            memory keys = new IHederaTokenService.TokenKey[](2);
+            memory keys = new IHederaTokenService.TokenKey[](3);
         keys[0] = getSingleKey(
             KeyType.SUPPLY,
             KeyValueType.CONTRACT_ID,
@@ -87,30 +90,23 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
             KeyValueType.CONTRACT_ID,
             address(this)
         );
+        keys[2] = getSingleKey(
+            KeyType.KYC,
+            KeyValueType.CONTRACT_ID,
+            address(this)
+        );
         token.tokenKeys = keys;
 
-        // Royalty: 10% with 1 HBAR fallback to the owner
-        IHederaTokenService.RoyaltyFee[]
-            memory royaltyFees = new IHederaTokenService.RoyaltyFee[](1);
-        royaltyFees[0] = IHederaTokenService.RoyaltyFee({
-            numerator: 1,
-            denominator: 10,
-            amount: 100_000_000, // 1 HBAR in tinybars
-            tokenId: address(0),
-            useHbarsForPayment: true,
-            feeCollector: owner()
-        });
-
-        IHederaTokenService.FixedFee[]
-            memory fixedFees = new IHederaTokenService.FixedFee[](0);
-
-        (int rc, address created) = createNonFungibleTokenWithCustomFees(
-            token,
-            fixedFees,
-            royaltyFees
-        );
+        (int rc, address created) = createNonFungibleToken(token);
         require(rc == HederaResponseCodes.SUCCESS, "HTS: create NFT failed");
         tokenAddress = created;
+
+        // KYC the treasury so it may receive and operate on NFTs when KYC is enforced
+        int rcTreasuryKyc = grantTokenKyc(tokenAddress, address(this));
+        require(
+            rcTreasuryKyc == HederaResponseCodes.SUCCESS,
+            "HTS: self KYC failed"
+        );
 
         emit NFTCollectionCreated(created);
     }
@@ -168,27 +164,34 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
     // Holder-initiated burn:
     // - User approves this contract for tokenId (approve or setApprovalForAll)
     // - Calls burn(tokenId); contract pulls to treasury and burns via HTS
+    // Allows onlyOwner to burn when the NFT is already in treasury,
+    // avoiding the need for ERC721 approvals in that case.
     function burnNFT(uint256 tokenId) external {
         require(tokenAddress != address(0), "HTS: not created");
 
         address owner_ = IERC721(tokenAddress).ownerOf(tokenId);
 
-        // Match ERC721Burnable semantics: only the token owner or an approved operator may trigger burn
-        require(
-            msg.sender == owner_ ||
-                IERC721(tokenAddress).getApproved(tokenId) == msg.sender ||
-                IERC721(tokenAddress).isApprovedForAll(owner_, msg.sender),
-            "caller not owner nor approved"
-        );
+        if (owner_ == address(this)) {
+            // Token already in treasury; restrict burn to contract owner
+            require(msg.sender == owner(), "only owner can burn from treasury");
+        } else {
+            // If not already in treasury, ensure this contract is approved to pull the token and then pull it
+            // Holder-initiated path (requires prior approval to let the contract pull the NFT)
+            // Match ERC721Burnable semantics: only the token owner or an approved operator may trigger burn
+            require(
+                msg.sender == owner_ ||
+                    IERC721(tokenAddress).getApproved(tokenId) == msg.sender ||
+                    IERC721(tokenAddress).isApprovedForAll(owner_, msg.sender),
+                "caller not owner nor approved"
+            );
 
-        // If not already in treasury, ensure this contract is approved to pull the token and then pull it
-        if (owner_ != address(this)) {
             bool contractApproved = IERC721(tokenAddress).getApproved(
                 tokenId
             ) ==
                 address(this) ||
                 IERC721(tokenAddress).isApprovedForAll(owner_, address(this));
             require(contractApproved, "contract not approved to transfer");
+
             IERC721(tokenAddress).transferFrom(owner_, address(this), tokenId);
         }
 
@@ -199,6 +202,45 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
         require(rc == HederaResponseCodes.SUCCESS, "HTS: burn failed");
 
         emit NFTBurned(tokenId, newTotalSupply);
+    }
+
+    function grantKYC(address account) external {
+        require(tokenAddress != address(0), "HTS: not created");
+        int response = grantTokenKyc(tokenAddress, account);
+        require(
+            response == HederaResponseCodes.SUCCESS,
+            "HTS: grant KYC failed"
+        );
+        emit KYCGranted(account);
+    }
+
+    function revokeKYC(address account) external {
+        require(tokenAddress != address(0), "HTS: not created");
+        int response = revokeTokenKyc(tokenAddress, account);
+        require(
+            response == HederaResponseCodes.SUCCESS ||
+                response ==
+                HederaResponseCodes.ACCOUNT_KYC_NOT_GRANTED_FOR_TOKEN,
+            "HTS: revoke KYC failed"
+        );
+        emit KYCRevoked(account);
+    }
+
+    function updateKYCKey(bytes memory newKYCKey) external onlyOwner {
+        require(tokenAddress != address(0), "HTS: not created");
+
+        // Create a new TokenKey array with just the KYC key
+        IHederaTokenService.TokenKey[]
+            memory keys = new IHederaTokenService.TokenKey[](1);
+        keys[0] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, newKYCKey);
+
+        int responseCode = updateTokenKeys(tokenAddress, keys);
+        require(
+            responseCode == HederaResponseCodes.SUCCESS,
+            "HTS: update KYC key failed"
+        );
+
+        emit KYCKeyUpdated(newKYCKey);
     }
 
     // ---------------------------------------------------------------------------
