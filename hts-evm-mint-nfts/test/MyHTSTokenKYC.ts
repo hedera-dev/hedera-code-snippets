@@ -43,7 +43,7 @@ describe("MyHTSToken KYC (Hedera testnet)", function () {
       "MHTKYC",
       {
         value: ethers.parseEther("15"),
-        gasLimit: 500_000
+        gasLimit: 350_000
       }
     );
 
