@@ -18,10 +18,12 @@ import {KeyHelper} from "@hashgraph/smart-contracts/contracts/system-contracts/h
  * - Creates the HTS NFT collection in the constructor (like deploying an ERC721).
  * - SUPPLY key = this contract (mint/burn only via contract).
  * - ADMIN key  = this contract (admin updates only via contract).
+ * - PAUSE key  = this contract (pause/unpause via contract).
+ * - FREEZE key  = this contract (freeze/unfreeze via contract).
+ * - WIPE key  = this contract (wipe via contract).
  * - Holders use the token’s ERC721 facade directly (SDK or EVM).
- * - Royalty: 10% with 1 HBAR fallback to initialOwner.
  */
-contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
+contract MyHTSTokenPFWD is HederaTokenService, KeyHelper, Ownable {
     // Underlying HTS NFT token EVM address (set during initialize. This is the "ERC721-like" token)
     address public tokenAddress;
 
@@ -40,6 +42,12 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
         int64 newTotalSupply
     );
     event NFTBurned(uint256 indexed tokenId, int64 newTotalSupply);
+    event TokenPaused();
+    event TokenUnpaused();
+    event AccountFrozen(address indexed account);
+    event AccountUnfrozen(address indexed account);
+    event TokenWiped(address indexed account, int64[] serialNumbers);
+    event TokenDeleted();
     event HBARReceived(address indexed from, uint256 amount);
     event HBARFallback(address sender, uint256 amount, bytes data);
     event HBARWithdrawn(address indexed to, uint256 amount);
@@ -73,9 +81,9 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
         token.treasury = address(this);
         token.memo = "";
 
-        // Keys: SUPPLY + ADMIN -> contractId
+        // Keys: SUPPLY + ADMIN/DELETE + PAUSE + FREEZE + WIPE -> contractId
         IHederaTokenService.TokenKey[]
-            memory keys = new IHederaTokenService.TokenKey[](2);
+            memory keys = new IHederaTokenService.TokenKey[](5);
         keys[0] = getSingleKey(
             KeyType.SUPPLY,
             KeyValueType.CONTRACT_ID,
@@ -86,28 +94,24 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
             KeyValueType.CONTRACT_ID,
             address(this)
         );
+        keys[2] = getSingleKey(
+            KeyType.PAUSE,
+            KeyValueType.CONTRACT_ID,
+            address(this)
+        );
+        keys[3] = getSingleKey(
+            KeyType.FREEZE,
+            KeyValueType.CONTRACT_ID,
+            address(this)
+        );
+        keys[4] = getSingleKey(
+            KeyType.WIPE,
+            KeyValueType.CONTRACT_ID,
+            address(this)
+        );
         token.tokenKeys = keys;
 
-        // Royalty: 10% with 1 HBAR fallback to the owner
-        IHederaTokenService.RoyaltyFee[]
-            memory royaltyFees = new IHederaTokenService.RoyaltyFee[](1);
-        royaltyFees[0] = IHederaTokenService.RoyaltyFee({
-            numerator: 1,
-            denominator: 10,
-            amount: 100_000_000, // 1 HBAR in tinybars
-            tokenId: address(0),
-            useHbarsForPayment: true,
-            feeCollector: owner()
-        });
-
-        IHederaTokenService.FixedFee[]
-            memory fixedFees = new IHederaTokenService.FixedFee[](0);
-
-        (int rc, address created) = createNonFungibleTokenWithCustomFees(
-            token,
-            fixedFees,
-            royaltyFees
-        );
+        (int rc, address created) = createNonFungibleToken(token);
         require(rc == HederaResponseCodes.SUCCESS, "HTS: create NFT failed");
         tokenAddress = created;
 
@@ -167,6 +171,8 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
     // Holder-initiated burn:
     // - User approves this contract for tokenId (approve or setApprovalForAll)
     // - Calls burn(tokenId); contract pulls to treasury and burns via HTS
+    // Allows onlyOwner to burn when the NFT is already in treasury,
+    // avoiding the need for ERC721 approvals in that case.
     function burnNFT(uint256 tokenId) external {
         require(tokenAddress != address(0), "HTS: not created");
 
@@ -198,6 +204,73 @@ contract MyHTSToken is HederaTokenService, KeyHelper, Ownable {
         require(rc == HederaResponseCodes.SUCCESS, "HTS: burn failed");
 
         emit NFTBurned(tokenId, newTotalSupply);
+    }
+
+    function pauseToken() external onlyOwner {
+        require(tokenAddress != address(0), "HTS: not created");
+        int response = pauseToken(tokenAddress);
+        require(
+            response == HederaResponseCodes.SUCCESS,
+            "HTS: pause token failed"
+        );
+        emit TokenPaused();
+    }
+
+    function unpauseToken() external onlyOwner {
+        require(tokenAddress != address(0), "HTS: not created");
+        int response = unpauseToken(tokenAddress);
+        require(
+            response == HederaResponseCodes.SUCCESS,
+            "HTS: unpause token failed"
+        );
+        emit TokenUnpaused();
+    }
+
+    function freezeAccount(address account) external onlyOwner {
+        require(tokenAddress != address(0), "HTS: not created");
+        int response = freezeToken(tokenAddress, account);
+        require(
+            response == HederaResponseCodes.SUCCESS,
+            "HTS: freeze account failed"
+        );
+        emit AccountFrozen(account);
+    }
+
+    function unfreezeAccount(address account) external onlyOwner {
+        require(tokenAddress != address(0), "HTS: not created");
+        int response = unfreezeToken(tokenAddress, account);
+        require(
+            response == HederaResponseCodes.SUCCESS,
+            "HTS: unfreeze account failed"
+        );
+        emit AccountUnfrozen(account);
+    }
+
+    function wipeTokenFromAccount(
+        address account,
+        int64[] memory serialNumbers
+    ) external onlyOwner {
+        require(tokenAddress != address(0), "HTS: not created");
+        int response = wipeTokenAccountNFT(
+            tokenAddress,
+            account,
+            serialNumbers
+        );
+        require(
+            response == HederaResponseCodes.SUCCESS,
+            "HTS: wipe token failed"
+        );
+        emit TokenWiped(account, serialNumbers);
+    }
+
+    function deleteToken() external onlyOwner {
+        require(tokenAddress != address(0), "HTS: not created");
+        int response = deleteToken(tokenAddress);
+        require(
+            response == HederaResponseCodes.SUCCESS,
+            "HTS: delete token failed"
+        );
+        emit TokenDeleted();
     }
 
     // ---------------------------------------------------------------------------

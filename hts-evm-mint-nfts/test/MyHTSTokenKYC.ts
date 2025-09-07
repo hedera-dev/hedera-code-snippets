@@ -16,18 +16,6 @@ const ERC721_MIN_ABI = [
   "function balanceOf(address owner) external view returns (uint256)"
 ];
 
-// Derive the signer's compressed secp256k1 public key via a signature (no env PK needed)
-async function getCompressedPublicKeyFromSigner(
-  signer: any
-): Promise<Uint8Array> {
-  const message = ethers.toUtf8Bytes("derive-compressed-pubkey");
-  const signature = await signer.signMessage(message);
-  const digest = ethers.hashMessage(message);
-  const uncompressed = ethers.SigningKey.recoverPublicKey(digest, signature); // 0x04...
-  const compressedHex = ethers.SigningKey.computePublicKey(uncompressed, true); // 0x02/0x03...
-  return ethers.getBytes(compressedHex);
-}
-
 describe("MyHTSToken KYC (Hedera testnet)", function () {
   this.timeout(300_000);
 
@@ -43,7 +31,7 @@ describe("MyHTSToken KYC (Hedera testnet)", function () {
       "MHTKYC",
       {
         value: ethers.parseEther("15"),
-        gasLimit: 500_000
+        gasLimit: 350_000
       }
     );
 
@@ -178,3 +166,17 @@ describe("MyHTSToken KYC (Hedera testnet)", function () {
     ).to.be.revert(ethers);
   });
 });
+
+// Derive the signer's compressed secp256k1 public key via a signature (no env PK needed)
+async function getCompressedPublicKeyFromSigner(
+  signer: any
+): Promise<Uint8Array> {
+  const message = ethers.toUtf8Bytes("derive-compressed-pubkey");
+  const signature = await signer.signMessage(message);
+  const digest = ethers.hashMessage(message);
+  const uncompressed = ethers.SigningKey.recoverPublicKey(digest, signature); // 0x04...
+  const compressedHex = ethers.SigningKey.computePublicKey(uncompressed, true); // 0x02/0x03...
+  return ethers.getBytes(compressedHex);
+}
+
+

@@ -18,9 +18,8 @@ import {KeyHelper} from "@hashgraph/smart-contracts/contracts/system-contracts/h
  * - Creates the HTS NFT collection in the constructor (like deploying an ERC721).
  * - SUPPLY key = this contract (mint/burn only via contract).
  * - ADMIN key  = this contract (admin updates only via contract).
- * - No PAUSE key (immediately usable after deployment).
+ * - KYC key    = this contract (KYC management via contract).
  * - Holders use the token’s ERC721 facade directly (SDK or EVM).
- * - Royalty: 10% with 1 HBAR fallback to initialOwner.
  */
 contract MyHTSTokenKYC is HederaTokenService, KeyHelper, Ownable {
     // Underlying HTS NFT token EVM address (set during initialize. This is the "ERC721-like" token)
@@ -171,27 +170,22 @@ contract MyHTSTokenKYC is HederaTokenService, KeyHelper, Ownable {
 
         address owner_ = IERC721(tokenAddress).ownerOf(tokenId);
 
-        if (owner_ == address(this)) {
-            // Token already in treasury; restrict burn to contract owner
-            require(msg.sender == owner(), "only owner can burn from treasury");
-        } else {
-            // If not already in treasury, ensure this contract is approved to pull the token and then pull it
-            // Holder-initiated path (requires prior approval to let the contract pull the NFT)
-            // Match ERC721Burnable semantics: only the token owner or an approved operator may trigger burn
-            require(
-                msg.sender == owner_ ||
-                    IERC721(tokenAddress).getApproved(tokenId) == msg.sender ||
-                    IERC721(tokenAddress).isApprovedForAll(owner_, msg.sender),
-                "caller not owner nor approved"
-            );
+        // Match ERC721Burnable semantics: only the token owner or an approved operator may trigger burn
+        require(
+            msg.sender == owner_ ||
+                IERC721(tokenAddress).getApproved(tokenId) == msg.sender ||
+                IERC721(tokenAddress).isApprovedForAll(owner_, msg.sender),
+            "caller not owner nor approved"
+        );
 
+        // If not already in treasury, ensure this contract is approved to pull the token and then pull it
+        if (owner_ != address(this)) {
             bool contractApproved = IERC721(tokenAddress).getApproved(
                 tokenId
             ) ==
                 address(this) ||
                 IERC721(tokenAddress).isApprovedForAll(owner_, address(this));
             require(contractApproved, "contract not approved to transfer");
-
             IERC721(tokenAddress).transferFrom(owner_, address(this), tokenId);
         }
 
@@ -203,7 +197,6 @@ contract MyHTSTokenKYC is HederaTokenService, KeyHelper, Ownable {
 
         emit NFTBurned(tokenId, newTotalSupply);
     }
-
     function grantKYC(address account) external {
         require(tokenAddress != address(0), "HTS: not created");
         int response = grantTokenKyc(tokenAddress, account);
