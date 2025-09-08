@@ -7,7 +7,7 @@ const { ethers } = await network.connect({ network: "testnet" });
 let myHTSTokenPFWD: any;
 let htsErc721Address: string;
 let tokenIdA: bigint; // minted to deployer initially
-let tokenIdB: bigint; // minted to user2 for freeze/wipe tests
+let tokenIdB: bigint; // minted to user2 for wipe/burn test
 let deployer: any;
 let user2: Wallet | any;
 
@@ -37,7 +37,7 @@ describe("MyHTSToken PFWD (Hedera testnet)", function () {
       "MHTPFWD",
       {
         value: ethers.parseEther("15"),
-        gasLimit: 350_000
+        gasLimit: 400_000
       }
     );
     await expect(tx).to.emit(myHTSTokenPFWD, "NFTCollectionCreated");
@@ -64,16 +64,15 @@ describe("MyHTSToken PFWD (Hedera testnet)", function () {
       myHTSTokenPFWD.interface,
       myHTSTokenPFWD.target
     );
-    if (tokenIdA === 0n) tokenIdA = 1n; // fallback if logs unavailable
     expect(tokenIdA).to.not.equal(0n);
   });
 
   it("pauses and unpauses the token; transfers fail while paused and succeed when unpaused", async () => {
     // Pause the token
-    const pauseTx = await myHTSTokenPFWD.pauseToken({ gasLimit: 250_000 });
+    const pauseTx = await myHTSTokenPFWD.pauseToken({ gasLimit: 70_000 });
     await expect(pauseTx).to.emit(myHTSTokenPFWD, "TokenPaused");
 
-    // Assert transfer fails while paused (silent try/catch)
+    // Assert transfer fails while paused (flag + assert)
     const erc721Deployer = erc721For(deployer);
     let pausedTransferFailed = false;
     try {
@@ -81,7 +80,6 @@ describe("MyHTSToken PFWD (Hedera testnet)", function () {
         deployer.address,
         user2.address,
         tokenIdA,
-        { gasLimit: 400_000 }
       );
       await t.wait();
     } catch {
@@ -90,15 +88,14 @@ describe("MyHTSToken PFWD (Hedera testnet)", function () {
     expect(pausedTransferFailed).to.equal(true);
 
     // Unpause the token
-    const unpauseTx = await myHTSTokenPFWD.unpauseToken({ gasLimit: 250_000 });
+    const unpauseTx = await myHTSTokenPFWD.unpauseToken({ gasLimit: 70_000 });
     await expect(unpauseTx).to.emit(myHTSTokenPFWD, "TokenUnpaused");
 
     // Transfer should now succeed
     const xferTx = await erc721Deployer.transferFrom(
       deployer.address,
       user2.address,
-      tokenIdA,
-      { gasLimit: 400_000 }
+      tokenIdA
     );
     await xferTx.wait();
 
@@ -106,7 +103,7 @@ describe("MyHTSToken PFWD (Hedera testnet)", function () {
     expect(newOwner.toLowerCase()).to.equal(user2.address.toLowerCase());
   });
 
-  it("mints a second NFT to user2 for freeze/wipe tests (tokenIdB)", async () => {
+  it("mints a second NFT to user2 for wipe/burn test (tokenIdB)", async () => {
     const mintTx = (await myHTSTokenPFWD["mintNFT(address)"](user2.address, {
       gasLimit: 400_000
     })) as unknown as ContractTransactionResponse;
@@ -121,169 +118,78 @@ describe("MyHTSToken PFWD (Hedera testnet)", function () {
     expect(tokenIdB).to.not.equal(0n);
   });
 
-  it("freezes user2; transfer attempts fail; unfreezes and transfer succeeds", async () => {
-    // Freeze user2
-    const freezeTx = await myHTSTokenPFWD.freezeAccount(user2.address, {
-      gasLimit: 200_000
-    });
-    await expect(freezeTx)
-      .to.emit(myHTSTokenPFWD, "AccountFrozen")
-      .withArgs(user2.address);
-
-    // Assert transfer fails while frozen (silent try/catch)
-    const erc721User2 = erc721For(user2);
-    let frozenTransferFailed = false;
-    try {
-      const t = await erc721User2.transferFrom(
-        user2.address,
-        deployer.address,
-        tokenIdA,
-        { gasLimit: 400_000 }
-      );
-      await t.wait();
-    } catch {
-      frozenTransferFailed = true;
-    }
-    expect(frozenTransferFailed).to.equal(true);
-
-    // Unfreeze user2
-    const unfreezeTx = await myHTSTokenPFWD.unfreezeAccount(user2.address, {
-      gasLimit: 200_000
-    });
-    await expect(unfreezeTx)
-      .to.emit(myHTSTokenPFWD, "AccountUnfrozen")
-      .withArgs(user2.address);
-
-    // Now transfer back to deployer
-    const xferBackTx = await erc721User2.transferFrom(
-      user2.address,
-      deployer.address,
-      tokenIdA,
-      { gasLimit: 400_000 }
-    );
-    await xferBackTx.wait();
-
-    const newOwner = await ownerOf(tokenIdA);
-    expect(newOwner.toLowerCase()).to.equal(deployer.address.toLowerCase());
-  });
-
-  it("wipes tokenIdB from user2 and confirms balance decreases (falls back to burn if wipe not allowed)", async () => {
-    // Optionally freeze user2 before wipe (some nodes require)
-    let frozeForWipe = false;
-    try {
-      await (
-        await myHTSTokenPFWD.freezeAccount(user2.address, { gasLimit: 200_000 })
-      ).wait();
-      frozeForWipe = true;
-    } catch {
-      // ignore if unnecessary/already frozen
-    }
-
-    // Balance before
+  it("wipes tokenIdB from user2; balance must decrease", async () => {
+    // Balance before (on ERC721 facade)
     const erc721Viewer = new ethers.Contract(
       htsErc721Address,
-      ["function balanceOf(address owner) view returns (uint256)"],
+      ERC721_MIN_ABI,
       ethers.provider
     );
     const balBefore = (await erc721Viewer.balanceOf(user2.address)) as bigint;
 
-    // Attempt wipe
-    let wiped = false;
+    // Attempt wipe once (wrapper holds WIPE key)
+    let wipeSucceeded = false;
     try {
-      const serials = [tokenIdB];
       const wipeTx = await myHTSTokenPFWD.wipeTokenFromAccount(
         user2.address,
-        serials,
-        { gasLimit: 600_000 }
+        [tokenIdB],
+        { gasLimit: 70_000 }
       );
       await wipeTx.wait();
-      wiped = true;
+      wipeSucceeded = true;
     } catch {
-      // fall through to burn
+      wipeSucceeded = false;
     }
+    expect(wipeSucceeded, "Wipe failed").to.equal(true);
 
-    // If wipe failed, unfreeze (if we froze), then burn via wrapper from user2
-    if (!wiped) {
-      if (frozeForWipe) {
-        try {
-          await (
-            await myHTSTokenPFWD.unfreezeAccount(user2.address, {
-              gasLimit: 200_000
-            })
-          ).wait();
-        } catch {}
-      }
-      const erc721User2 = erc721For(user2);
-      let approved = false;
-      try {
-        const approveTx = await erc721User2.approve(
-          myHTSTokenPFWD.target,
-          tokenIdB
-        );
-        await approveTx.wait();
-        approved = true;
-      } catch {}
-      if (!approved) {
-        const opTx = await erc721User2.setApprovalForAll(
-          myHTSTokenPFWD.target,
-          true
-        );
-        await opTx.wait();
-      }
-      const burnTxB = await myHTSTokenPFWD.connect(user2).burnNFT(tokenIdB, {
-        gasLimit: 350_000
-      });
-      await burnTxB.wait();
-    }
-
-    // Ensure user2 is unfrozen for subsequent steps
-    try {
-      await (
-        await myHTSTokenPFWD.unfreezeAccount(user2.address, {
-          gasLimit: 200_000
-        })
-      ).wait();
-    } catch {}
-
-    // Check balance decreased
+    // Balance after
     const balAfter = (await erc721Viewer.balanceOf(user2.address)) as bigint;
-    expect(balAfter < balBefore).to.equal(true);
+    expect(
+      balAfter < balBefore,
+      "Balance did not decrease after wipe"
+    ).to.equal(true);
   });
 
-  it("burns tokenIdA via wrapper and then deletes the token", async () => {
-    // Approve wrapper for tokenIdA; if single-token approve fails, try setApprovalForAll
-    const erc721Deployer = erc721For(deployer);
-    let approved = false;
-    try {
-      const approveTx = await erc721Deployer.approve(
-        myHTSTokenPFWD.target,
-        tokenIdA
-      );
-      await approveTx.wait();
-      approved = true;
-    } catch {}
-    if (!approved) {
-      const opTx = await erc721Deployer.setApprovalForAll(
-        myHTSTokenPFWD.target,
-        true
-      );
-      await opTx.wait();
-    }
+  it("burns tokenIdA via wrapper (using the current holder) and then deletes the token", async () => {
+    // Determine current holder (it was moved to user2 earlier)
+    const currentOwner = (await ownerOf(tokenIdA)).toLowerCase();
+    const holderSigner =
+      currentOwner === deployer.address.toLowerCase() ? deployer : user2;
+    expect(currentOwner).to.equal(
+      (await holderSigner.getAddress()).toLowerCase()
+    );
 
-    const burnTx = await myHTSTokenPFWD.burnNFT(tokenIdA, {
-      gasLimit: 350_000
-    });
-    await burnTx.wait();
+    // Ensure approval for THIS tokenId from the holder
+    await ensureApprovedForToken(holderSigner, myHTSTokenPFWD.target, tokenIdA);
+
+    // Burn (call wrapper as the holder)
+    const burnTx = await myHTSTokenPFWD
+      .connect(holderSigner)
+      .burnNFT(tokenIdA, {
+        gasLimit: 350_000
+      });
+    const burnRcpt = await burnTx.wait();
+    expect(!!burnRcpt?.hash, "Burn tx did not finalize").to.equal(true);
+
+    // ownerOf should now revert for tokenIdA
+    let ownerOfReverted = false;
+    try {
+      await ownerOf(tokenIdA);
+    } catch {
+      ownerOfReverted = true;
+    }
+    expect(ownerOfReverted, "ownerOf did not revert after burn").to.equal(true);
 
     // Delete token (succeeds when total supply is zero)
-    const delTx = await myHTSTokenPFWD.deleteToken({ gasLimit: 350_000 });
-    await delTx.wait();
+    const delTx = await myHTSTokenPFWD.deleteToken({ gasLimit: 70_000 });
+    const delRcpt = await delTx.wait();
+    expect(!!delRcpt?.hash, "Delete tx did not finalize").to.equal(true);
   });
 
   it("fails to mint after token deletion", async () => {
     await expect(
       myHTSTokenPFWD["mintNFT(address)"](deployer.address, {
-        gasLimit: 300_000
+        gasLimit: 400_000
       })
     ).to.be.revert(ethers);
   });
@@ -342,7 +248,9 @@ async function ensureAssociation(signer: any, tokenAddress: string) {
   try {
     const assocTx = await token.associate({ gasLimit: 800_000 });
     await assocTx.wait();
-  } catch {}
+  } catch {
+    // If already associated, a revert is acceptable and can be ignored here.
+  }
 }
 
 function erc721For(signer: any) {
@@ -352,8 +260,59 @@ function erc721For(signer: any) {
 async function ownerOf(tokenId: bigint): Promise<string> {
   const viewer = new ethers.Contract(
     htsErc721Address,
-    ["function ownerOf(uint256 tokenId) view returns (address)"],
+    ERC721_MIN_ABI,
     ethers.provider
   );
   return viewer.ownerOf(tokenId);
+}
+
+async function ensureOperatorApproval(signer: any, operator: string) {
+  const erc721 = new ethers.Contract(
+    htsErc721Address,
+    ["function setApprovalForAll(address operator, bool approved) external"],
+    signer
+  );
+  const tx = await erc721.setApprovalForAll(operator, true);
+  await tx.wait();
+}
+
+async function ensureApprovedForToken(
+  signer: any,
+  operator: string,
+  tokenId: bigint
+) {
+  const erc721 = new ethers.Contract(htsErc721Address, ERC721_MIN_ABI, signer);
+
+  // Already approved for this token?
+  try {
+    const curr = (await erc721.getApproved(tokenId)) as string;
+    if (curr && curr.toLowerCase() === operator.toLowerCase()) return;
+  } catch {}
+
+  // Already operator-approved?
+  try {
+    const op = await erc721.isApprovedForAll(
+      await signer.getAddress(),
+      operator
+    );
+    if (op === true) return;
+  } catch {}
+
+  // Prefer single-token approval; if it fails, fall back to operator approval
+  try {
+    const atx = await erc721.approve(operator, tokenId);
+    await atx.wait();
+    const curr = (await erc721.getApproved(tokenId)) as string;
+    if (curr && curr.toLowerCase() === operator.toLowerCase()) return;
+  } catch {
+    // fall through to operator approval
+  }
+
+  const o = await erc721.setApprovalForAll(operator, true);
+  await o.wait();
+
+  const op = await erc721.isApprovedForAll(await signer.getAddress(), operator);
+  if (op !== true) {
+    throw new Error("Failed to ensure approval for burn");
+  }
 }

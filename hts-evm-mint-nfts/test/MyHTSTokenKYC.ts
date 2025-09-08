@@ -162,7 +162,7 @@ describe("MyHTSToken KYC (Hedera testnet)", function () {
   it("fails to grant KYC after KYC key update (contract no longer holds KYC key)", async () => {
     const [deployer] = await ethers.getSigners();
     await expect(
-      myHTSTokenKYC.grantKYC(deployer.address, { gasLimit: 600_000 })
+      myHTSTokenKYC.grantKYC(deployer.address)
     ).to.be.revert(ethers);
   });
 });
