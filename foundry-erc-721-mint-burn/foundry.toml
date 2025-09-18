@@ -4,7 +4,7 @@ out = "out"
 libs = ["lib"]
 remappings = []
 
-# Add this section for Hedera Testnet
+# Add this section for Hedera testnet
 [rpc_endpoints]
 testnet = "${HEDERA_RPC_URL}"
 
