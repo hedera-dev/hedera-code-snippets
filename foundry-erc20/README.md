@@ -82,7 +82,7 @@ source .env
 Let's also save our address for future use:
 
 ```bash
-export MY_ADDRESS=$(cast wallet address $OPERATOR_KEY)
+export MY_ADDRESS=$(cast wallet address $HEDERA_PRIVATE_KEY)
 ```
 
 ### Check ERC20 Balance
@@ -104,7 +104,7 @@ Send 100 tokens:
 ```bash
 cast send $CONTRACT_ADDRESS "transfer(address,uint256)" $RECIPIENT_ADDRESS 100e18 \
     --private-key $OPERATOR_KEY \
-    --rpc-url $RPC_URL
+    --rpc-url $HEDERA_RPC_URL
 ```
 
 ### Mint Tokens (Owner only)
@@ -114,7 +114,7 @@ Mint 500 tokens to any address (owner must call this):
 ```bash
 cast send $CONTRACT_ADDRESS "mint(address,uint256)" $RECIPIENT_ADDRESS 500e18 \
     --private-key $OPERATOR_KEY \
-    --rpc-url $RPC_URL
+    --rpc-url $HEDERA_RPC_URL
 ```
 
 ---
