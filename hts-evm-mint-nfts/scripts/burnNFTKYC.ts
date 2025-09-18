@@ -7,16 +7,16 @@ async function main() {
   const [signer] = await ethers.getSigners();
   console.log("Using signer:", signer.address);
 
-  const contractAddress = "0x2543aD4C77ebB24a5320F69450888D56c2D2cb96";
+  const contractAddress = "0xe162146963C77CaC223a5D0f6DeFb7035fF7075D";
   const tokenId = BigInt("1");
 
-  const contract = await ethers.getContractAt(
+  const myHTSTokenKYCContract = await ethers.getContractAt(
     "MyHTSTokenKYC",
     contractAddress,
     signer
   );
 
-  const tokenAddress: string = await contract.tokenAddress();
+  const tokenAddress: string = await myHTSTokenKYCContract.tokenAddress();
   console.log("HTS ERC721 facade address:", tokenAddress);
 
   // Minimal ERC721 ABI for approvals and balance
@@ -52,12 +52,11 @@ async function main() {
 
   // Burn via MyHTSTokenKYC
   console.log(`Burning tokenId ${tokenId.toString()}...`);
-  const burnTx = (await contract.burnNFT(tokenId, {
+  const burnTx = (await myHTSTokenKYCContract.burnNFT(tokenId, {
     gasLimit: 200_000
   })) as unknown as ContractTransactionResponse;
-  const burnRcpt = await burnTx.wait();
+  await burnTx.wait();
   console.log("Burn tx hash:", burnTx.hash);
-  console.log("Burn tx receipt:", JSON.stringify(burnRcpt, null, 2));
 
   // Show caller's balance after burn
   const balanceAfter = (await erc721.balanceOf(signer.address)) as bigint;

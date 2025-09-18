@@ -1,4 +1,3 @@
-import { ContractTransactionResponse } from "ethers";
 import { network } from "hardhat";
 
 const { ethers } = await network.connect({ network: "testnet" });
@@ -7,20 +6,28 @@ async function main() {
   const [signer] = await ethers.getSigners();
   console.log("Using signer:", signer.address);
 
-  const contractAddress = "0xE93E01fEe6Aaf79302bb92c76cD5ee8FE88371Ff";
+  const contractAddress = "<your-contract-address>";
   const recipient = signer.address;
 
-  const contract = await ethers.getContractAt(
+  const myHTSTokenContract = await ethers.getContractAt(
     "MyHTSToken",
     contractAddress,
     signer
   );
 
   // Display the underlying HTS token address
-  const tokenAddress = await contract.tokenAddress();
+  const tokenAddress = await myHTSTokenContract.tokenAddress();
   console.log("HTS ERC721 facade address:", tokenAddress);
 
-  // Create metadata for the NFT (must be <= 100 bytes)
+  // 1) Associate the signer via token.associate() (EOA -> token contract)
+  const tokenAssociateAbi = ["function associate()"];
+  const token = new ethers.Contract(tokenAddress, tokenAssociateAbi, signer);
+  console.log("Associating signer to token via token.associate() ...");
+  const assocTx = await token.associate({ gasLimit: 800_000 });
+  await assocTx.wait();
+  console.log("Associate tx hash:", assocTx.hash);
+
+  // 2) Prepare metadata (<= 100 bytes)
   const metadata = ethers.hexlify(
     ethers.toUtf8Bytes(
       "ipfs://bafkreibr7cyxmy4iyckmlyzige4ywccyygomwrcn4ldcldacw3nxe3ikgq"
@@ -33,14 +40,19 @@ async function main() {
     );
   }
 
+  // 3) Mint the NFT via the wrapper (wrapper holds supply key)
   console.log(`Minting NFT to ${recipient} with metadata: ${metadata} ...`);
-  const tx = (await contract.mintNFT(recipient, metadata, {
-    gasLimit: 350_000
-  })) as unknown as ContractTransactionResponse;
-
-  const rcpt = await tx.wait();
+  // Note: Our mintNFT function is overloaded; we must use this syntax to disambiguate
+  // or we get a typescript error.
+  const tx = await myHTSTokenContract["mintNFT(address,bytes)"](
+    recipient,
+    metadata,
+    {
+      gasLimit: 350_000
+    }
+  );
+  await tx.wait();
   console.log("Mint tx hash:", tx.hash);
-  console.log("Mint tx receipt:", JSON.stringify(rcpt, null, 2));
 
   // Check recipient's NFT balance on the ERC721 facade (not on MyHTSToken)
   const erc721 = new ethers.Contract(

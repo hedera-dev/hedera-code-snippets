@@ -12,9 +12,6 @@ async function main() {
   const contract = await MyHTSToken.deploy();
   await contract.waitForDeployment();
 
-  const contractAddress = await contract.getAddress();
-  console.log("MyHTSToken contract deployed at:", contractAddress);
-
   // 2) Create the HTS NFT collection by calling createNFTCollection()
   //    NOTE: createNFTCollection() must be payable to accept this value.
   const NAME = "MyHTSTokenNFTCollection";
@@ -27,13 +24,12 @@ async function main() {
     gasLimit: 250_000,
     value: ethers.parseEther(HBAR_TO_SEND)
   });
-  const rcpt = await tx.wait();
-  console.log(
-    "createNFTCollection() tx receipt:",
-    JSON.stringify(rcpt, null, 2)
-  );
+  await tx.wait();
+  console.log("createNFTCollection() tx hash:", tx.hash);
 
   // 3) Read the created HTS token address
+  const contractAddress = await contract.getAddress();
+  console.log("MyHTSToken contract deployed at:", contractAddress);
   const tokenAddress = await contract.tokenAddress();
   console.log(
     "Underlying HTS NFT Collection (ERC721 facade) address:",

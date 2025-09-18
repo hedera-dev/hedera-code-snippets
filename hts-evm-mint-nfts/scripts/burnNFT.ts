@@ -7,16 +7,16 @@ async function main() {
   const [signer] = await ethers.getSigners();
   console.log("Using signer:", signer.address);
 
-  const contractAddress = "0xE93E01fEe6Aaf79302bb92c76cD5ee8FE88371Ff";
+  const contractAddress = "<your-contract-address>";
   const tokenId = BigInt("1");
 
-  const contract = await ethers.getContractAt(
+  const myHTSTokenContract = await ethers.getContractAt(
     "MyHTSToken",
     contractAddress,
     signer
   );
 
-  const tokenAddress: string = await contract.tokenAddress();
+  const tokenAddress: string = await myHTSTokenContract.tokenAddress();
   console.log("HTS ERC721 facade address:", tokenAddress);
 
   // Minimal ERC721 ABI for approvals and balance
@@ -52,12 +52,11 @@ async function main() {
 
   // Burn via MyHTSToken
   console.log(`Burning tokenId ${tokenId.toString()}...`);
-  const burnTx = (await contract.burnNFT(tokenId, {
+  const burnTx = (await myHTSTokenContract.burnNFT(tokenId, {
     gasLimit: 200_000
   })) as unknown as ContractTransactionResponse;
-  const burnRcpt = await burnTx.wait();
+  await burnTx.wait();
   console.log("Burn tx hash:", burnTx.hash);
-  console.log("Burn tx receipt:", JSON.stringify(burnRcpt, null, 2));
 
   // Show caller's balance after burn
   const balanceAfter = (await erc721.balanceOf(signer.address)) as bigint;

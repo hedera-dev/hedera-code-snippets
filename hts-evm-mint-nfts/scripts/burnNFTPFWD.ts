@@ -8,16 +8,16 @@ async function main() {
   console.log("Using signer:", signer.address);
 
   // Replace with your deployed MyHTSTokenPFWD contract address and the tokenId to burn
-  const contractAddress = "0xed86d9Ba0bbCd429266276331B8298718f9DD755";
+  const contractAddress = "0xFe70397079f479539977F60340ffa68Ff41d520f";
   const tokenId = BigInt("1");
 
-  const contract = await ethers.getContractAt(
+  const myHTSTokenPFWDContract = await ethers.getContractAt(
     "MyHTSTokenPFWD",
     contractAddress,
     signer
   );
 
-  const tokenAddress: string = await contract.tokenAddress();
+  const tokenAddress: string = await myHTSTokenPFWDContract.tokenAddress();
   console.log("HTS ERC721 facade address:", tokenAddress);
 
   // Minimal ERC721 ABI for approvals and balance
@@ -55,12 +55,11 @@ async function main() {
 
   // Burn via MyHTSTokenPFWD
   console.log(`Burning tokenId ${tokenId.toString()}...`);
-  const burnTx = (await contract.burnNFT(tokenId, {
+  const burnTx = (await myHTSTokenPFWDContract.burnNFT(tokenId, {
     gasLimit: 200_000
   })) as unknown as ContractTransactionResponse;
-  const burnRcpt = await burnTx.wait();
+  await burnTx.wait();
   console.log("Burn tx hash:", burnTx.hash);
-  console.log("Burn tx receipt:", JSON.stringify(burnRcpt, null, 2));
 
   // Show caller's balance after burn
   const balanceAfter = (await erc721.balanceOf(signer.address)) as bigint;

@@ -1,4 +1,3 @@
-import { ContractTransactionResponse } from "ethers";
 import { network } from "hardhat";
 
 const { ethers } = await network.connect({ network: "testnet" });
@@ -7,40 +6,34 @@ async function main() {
   const [signer] = await ethers.getSigners();
   console.log("Using signer:", signer.address);
 
-  const contractAddress = "0x2543aD4C77ebB24a5320F69450888D56c2D2cb96";
+  const contractAddress = "0xe162146963C77CaC223a5D0f6DeFb7035fF7075D";
   const recipient = signer.address;
 
-  const contract = await ethers.getContractAt(
+  const myHTSTokenKYCContract = await ethers.getContractAt(
     "MyHTSTokenKYC",
     contractAddress,
     signer
   );
 
   // Display the underlying HTS token address
-  const tokenAddress = await contract.tokenAddress();
+  const tokenAddress = await myHTSTokenKYCContract.tokenAddress();
   console.log("HTS ERC721 facade address:", tokenAddress);
 
-  // 1) Associate the signer via token.associate() (EOA -> token contract), fully on-chain (no SDK)
-  // If already associated, this may revert depending on node behavior; ignore in that case.
+  // 1) Associate the signer via token.associate() (EOA -> token contract)
   const tokenAssociateAbi = ["function associate()"];
   const token = new ethers.Contract(tokenAddress, tokenAssociateAbi, signer);
-  try {
-    console.log("Associating signer to token via token.associate() ...");
-    const assocTx = await token.associate({ gasLimit: 800_000 });
-    const assocRcpt = await assocTx.wait();
-    console.log("Associate tx hash:", assocTx.hash);
-  } catch (e: any) {
-    console.log(
-      "Associate call skipped/ignored (possibly already associated):",
-      e?.message || e
-    );
-  }
+  console.log("Associating signer to token via token.associate() ...");
+  const assocTx = await token.associate({ gasLimit: 800_000 });
+  await assocTx.wait();
+  console.log("Associate tx hash:", assocTx.hash);
 
   // 2) Grant KYC to the recipient via wrapper (wrapper holds KYC key)
   try {
     console.log(`Granting KYC to ${recipient} ...`);
-    const grantTx = await contract.grantKYC(recipient, { gasLimit: 75_000 });
-    const grantRcpt = await grantTx.wait();
+    const grantTx = await myHTSTokenKYCContract.grantKYC(recipient, {
+      gasLimit: 75_000
+    });
+    await grantTx.wait();
     console.log("Grant KYC tx hash:", grantTx.hash);
   } catch (e: any) {
     console.warn(
@@ -65,13 +58,17 @@ async function main() {
 
   // 4) Mint to recipient
   console.log(`Minting NFT to ${recipient} with metadata: ${metadata} ...`);
-  const tx = (await contract.mintNFT(recipient, metadata, {
-    gasLimit: 400_000
-  })) as unknown as ContractTransactionResponse;
-
-  const rcpt = await tx.wait();
+  // Note: Our mintNFT function is overloaded; we must use this syntax to disambiguate
+  // or we get a typescript error.
+  const tx = await myHTSTokenKYCContract["mintNFT(address,bytes)"](
+    recipient,
+    metadata,
+    {
+      gasLimit: 400_000
+    }
+  );
+  await tx.wait();
   console.log("Mint tx hash:", tx.hash);
-  console.log("Mint tx receipt:", JSON.stringify(rcpt, null, 2));
 
   // Check recipient's NFT balance on the ERC721 facade (not on MyHTSTokenKYC)
   const erc721 = new ethers.Contract(
