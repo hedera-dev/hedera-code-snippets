@@ -6,7 +6,7 @@ async function main() {
   const [signer] = await ethers.getSigners();
   console.log("Using signer:", signer.address);
 
-  const contractAddress = "0xe162146963C77CaC223a5D0f6DeFb7035fF7075D";
+  const contractAddress = "<your-contract-address>";
   const recipient = signer.address;
 
   const myHTSTokenKYCContract = await ethers.getContractAt(

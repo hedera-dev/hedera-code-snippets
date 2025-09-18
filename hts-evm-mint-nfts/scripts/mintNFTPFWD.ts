@@ -7,7 +7,7 @@ async function main() {
   console.log("Using signer:", signer.address);
 
   // Replace with your deployed MyHTSTokenPFWD contract address
-  const contractAddress = "0xFe70397079f479539977F60340ffa68Ff41d520f";
+  const contractAddress = "<your-contract-address>";
   const recipient = signer.address;
 
   const myHTSTokenPFWDContract = await ethers.getContractAt(

@@ -8,8 +8,8 @@ async function main() {
   console.log("Using signer:", signer.address);
 
   // Replace with your deployed MyHTSTokenPFWD contract address and the tokenId to burn
-  const contractAddress = "0xFe70397079f479539977F60340ffa68Ff41d520f";
-  const tokenId = BigInt("1");
+  const contractAddress = "<your-contract-address>";
+  const tokenId = BigInt("<your-token-id>");
 
   const myHTSTokenPFWDContract = await ethers.getContractAt(
     "MyHTSTokenPFWD",
