@@ -165,6 +165,7 @@ contract MyTokenTest is Test {
 
     function testFuzz_MintToAnyNonZeroAddress(address to) public {
         vm.assume(to != address(0));
+        vm.assume(to.code.length == 0); // ensure EOA, not a contract
 
         vm.prank(owner);
         uint256 id = token.safeMint(to);
