@@ -6,6 +6,7 @@ remappings = [
   "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
   "forge-std/=lib/forge-std/src/"
 ]
+gas_reports = ["MyToken", "MyTokenTest"]
 
 # Add this section for Hedera testnet
 [rpc_endpoints]

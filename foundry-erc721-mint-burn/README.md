@@ -1,66 +1,137 @@
-## Foundry
+# ERC721 Example with Foundry
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This repository demonstrates how to write, test, deploy, and verify an ERC721 smart contract on the [Hedera](https://hedera.com/) network using [Foundry](https://book.getfoundry.sh/).
 
-Foundry consists of:
+## Features
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- ERC721 token contract using OpenZeppelin
+- Ownership and minting logic
+- Comprehensive tests with Foundry
+- Automated deployment scripts
+- Smart contract verification on [HashScan](https://hashscan.io/)
+- Step-by-step developer documentation
 
-## Documentation
+---
 
-https://book.getfoundry.sh/
+## Getting Started
+
+### Prerequisites
+
+- [Foundry](https://book.getfoundry.sh/getting-started/installation)
+- A Hedera testnet account and ECDSA private key ([guide](https://portal.hedera.com))
+
+### Install
+
+Clone the repo and install dependencies:
+
+```bash
+git clone https://github.com/hedera-dev/hedera-code-snippets.git
+cd foundry-erc721-mint-burn
+forge install
+```
+
+### Configure Environment
+
+Copy `.env.example` file in the project root and modify with your own credentials:
+
+```bash
+cp .env.example .env
+```
+
+---
 
 ## Usage
 
-### Build
+### Build Contracts
 
-```shell
-$ forge build
+```bash
+forge build
 ```
 
-### Test
+### Run Tests
 
-```shell
-$ forge test
+```bash
+forge test
 ```
 
-### Format
+### Deploy to Hedera Testnet
 
-```shell
-$ forge fmt
+```bash
+forge script script/MyToken.s.sol --rpc-url testnet --broadcast
 ```
 
-### Gas Snapshots
+**After deployment:**
 
-```shell
-$ forge snapshot
+- **CONTRACT_ADDRESS**: The address printed as `Token deployed to: ...`
+- Save this for contract interaction and verification.
+
+```bash
+export CONTRACT_ADDRESS=<your-contract-address>
 ```
 
-### Anvil
+---
 
-```shell
-$ anvil
+## Interacting With Your Contract
+
+First, load your `.env` file:
+
+```bash
+source .env
 ```
 
-### Deploy
+Let's also save our address for future use:
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```bash
+export MY_ADDRESS=$(cast wallet address $OPERATOR_KEY)
 ```
 
-### Cast
+### Mint NFT (Owner only)
 
-```shell
-$ cast <subcommand>
+Mint 1 NFT to any address (owner must call this):
+
+```bash
+forge script script/MintMyToken.s.sol --rpc-url testnet --broadcast
 ```
 
-### Help
+### Burn NFT
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+Burn the NFT from your address (owner must call this):
+
+```bash
+forge script script/BurnMyToken.s.sol --rpc-url testnet --broadcast
 ```
+
+---
+
+### Verify on HashScan
+
+```bash
+forge verify-contract $CONTRACT_ADDRESS src/HederaToken.sol:HederaToken \
+    --chain-id 296 \
+    --verifier sourcify \
+    --verifier-url "https://server-verify.hashscan.io/" \
+    --constructor-args $(cast abi-encode "constructor(address)" $MY_ADDRESS)
+```
+
+---
+
+## File Structure
+
+```
+src/MyToken.sol         # ERC721 contract source
+script/DeployMyToken.s.sol # Deployment script
+script/MintMyToken.s.sol   # Minting script
+script/BurnMyToken.s.sol.  # Burning script
+test/MyToken.t.sol      # Test suite
+foundry.toml                # Foundry config
+.env                        # Environment variables
+```
+
+---
+
+## Resources
+
+- [Hedera documentation](https://docs.hedera.com/)
+- [Foundry Book](https://book.getfoundry.sh/)
+- [OpenZeppelin Contracts](https://github.com/OpenZeppelin/openzeppelin-contracts)
+- [HashScan](https://hashscan.io/)
