@@ -82,7 +82,7 @@ source .env
 Let's also save our address for future use:
 
 ```bash
-export MY_ADDRESS=$(cast wallet address $OPERATOR_KEY)
+export MY_ADDRESS=$(cast wallet address $HEDERA_PRIVATE_KEY)
 ```
 
 ### Mint NFT (Owner only)
