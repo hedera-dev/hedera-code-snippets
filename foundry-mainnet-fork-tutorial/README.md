@@ -47,7 +47,7 @@ forge build
 ### Deploy to Hedera Mainnet
 
 ```bash
-forge script script/MyToken.s.sol --rpc-url mainnet --broadcast
+forge script script/DeployMyToken.s.sol --rpc-url mainnet --broadcast
 ```
 
 **After deployment:**
@@ -96,8 +96,9 @@ forge script script/BurnMyToken.s.sol --rpc-url mainnet --broadcast
 ### Verify on HashScan
 
 ```bash
-forge verify-contract $CONTRACT_ADDRESS src/HederaToken.sol:HederaToken \
-    --chain-id 296 \
+export CONTRACT_ADDRESS=<your-contract-address>
+forge verify-contract $CONTRACT_ADDRESS src/MyToken.sol:MyToken \
+    --chain-id 295 \
     --verifier sourcify \
     --verifier-url "https://server-verify.hashscan.io/" \
     --constructor-args $(cast abi-encode "constructor(address)" $MY_ADDRESS)
@@ -105,16 +106,16 @@ forge verify-contract $CONTRACT_ADDRESS src/HederaToken.sol:HederaToken \
 
 ### Run Tests on the forked network
 
-You may need to update the contract address on `test/MyToken.t.sol` to your own deployed contract on mainnet.
+You will need to update the contract address on `test/MyToken.t.sol` to your own deployed contract on mainnet.
 
 ```bash
-forge test --fork-url https://mainnet.hashio.io/api
+forge test test/MyToken.t.sol --fork-url https://mainnet.hashio.io/api
 ```
 
 We can also pin a specific block for reproducibility:
 
 ```bash
-forge test --fork-url https://mainnet.hashio.io/api --fork-block-number 84800456
+forge test test/MyToken.t.sol --fork-url https://mainnet.hashio.io/api --fork-block-number 84800456
 ```
 
 We are using block number 84800456 for this testing because the contract from above(i.e. `0x07F6D65f9454EA2dff99bF8C2C1De918Fcd27416` was deployed on block `84800456`). We could also use any block number above this but we cannot use a block number below this number because the contract had not been deployed then.
