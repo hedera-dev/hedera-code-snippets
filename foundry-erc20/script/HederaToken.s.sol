@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.28;
 
 import {Script, console} from "forge-std/Script.sol";
 import {HederaToken} from "../src/HederaToken.sol";
@@ -7,8 +7,8 @@ import {HederaToken} from "../src/HederaToken.sol";
 contract HederaTokenScript is Script {
     function run() external returns (address) {
         // Load the private key from the .env file
-        uint256 deployerPrivateKey = vm.envUint("OPERATOR_KEY");
-        
+        uint256 deployerPrivateKey = vm.envUint("HEDERA_PRIVATE_KEY");
+
         // Start broadcasting transactions with the loaded private key
         vm.startBroadcast(deployerPrivateKey);
 

@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.28;
+
+import {Script, console} from "forge-std/Script.sol";
+import {MyToken} from "../src/MyToken.sol";
+
+contract BurnMyTokenScript is Script {
+    function run() external {
+        // Load the private key from the .env file
+        uint256 deployerPrivateKey = vm.envUint("HEDERA_PRIVATE_KEY");
+
+        address contractAddr = 0x4397fa3bD44bb9b2986C9463d794bDD73763A3dE; // Replace with your deployed contract address
+        uint256 tokenId = 0; // Replace with the tokenId you want to burn
+        address recipient = vm.addr(deployerPrivateKey);
+
+        vm.startBroadcast(deployerPrivateKey);
+        MyToken token = MyToken(contractAddr);
+        uint256 beforeBal = token.balanceOf(recipient);
+        token.burn(tokenId);
+        uint256 afterBal = token.balanceOf(recipient);
+        vm.stopBroadcast();
+
+        console.log("Burned tokenId:", tokenId);
+        console.log("Recipient:", recipient);
+        console.log("Balance before:", beforeBal);
+        console.log("Balance after:", afterBal);
+    }
+}
