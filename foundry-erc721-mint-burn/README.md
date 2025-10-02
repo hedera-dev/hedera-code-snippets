@@ -38,6 +38,11 @@ Copy `.env.example` file in the project root and modify with your own credential
 cp .env.example .env
 ```
 
+```
+HEDERA_RPC_URL=https://testnet.hashio.io/api
+HEDERA_PRIVATE_KEY=0x-your-private-key
+```
+
 ---
 
 ## Usage
@@ -90,6 +95,8 @@ export MY_ADDRESS=$(cast wallet address $HEDERA_PRIVATE_KEY)
 Mint 1 NFT to any address (owner must call this):
 
 ```bash
+# Make sure to update the file by replacing with 
+# your own contract address
 forge script script/MintMyToken.s.sol --rpc-url testnet --broadcast
 ```
 
@@ -98,6 +105,8 @@ forge script script/MintMyToken.s.sol --rpc-url testnet --broadcast
 Burn the NFT from your address (owner must call this):
 
 ```bash
+# Make sure to update the file by replacing with 
+# your own contract address
 forge script script/BurnMyToken.s.sol --rpc-url testnet --broadcast
 ```
 
