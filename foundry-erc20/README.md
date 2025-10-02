@@ -38,6 +38,12 @@ Copy `.env.example` file in the project root and modify with your own credential
 cp .env.example .env
 ```
 
+```
+HEDERA_RPC_URL=https://testnet.hashio.io/api
+
+HEDERA_PRIVATE_KEY=0x-your-private-key
+```
+
 ---
 
 ## Usage
