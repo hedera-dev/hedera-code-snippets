@@ -30,9 +30,6 @@ describe("RebalancerCapacityAware", function () {
 
     contractAddress = await rebalancer.getAddress();
     console.log("Contract deployed at:", contractAddress);
-
-    // Add delay after deployment to avoid rate limiting
-    await new Promise((resolve) => setTimeout(resolve, 3000));
   });
 
   it("should deploy with correct initial state", async function () {
@@ -54,16 +51,12 @@ describe("RebalancerCapacityAware", function () {
       user
     );
 
-    const intervalSeconds = 15;
+    const intervalSeconds = 15; // Changed to 15 seconds for faster testing
 
-    console.log("  Starting rebalancing.. .");
     const tx = (await rebalancerAsUser.startRebalancing(
       intervalSeconds
     )) as unknown as ContractTransactionResponse;
-
-    console.log("  Waiting for transaction confirmation...");
     const receipt = await tx.wait();
-    console.log("  Transaction confirmed:", tx.hash);
 
     // Check RebalancingStarted event
     const startedEvent = receipt?.logs.find(
@@ -135,7 +128,6 @@ describe("RebalancerCapacityAware", function () {
     const configBefore = await rebalancer.config();
     expect(configBefore.active).to.equal(true);
 
-    console.log("  Stopping rebalancing...");
     const tx =
       (await rebalancerAsUser.stopRebalancing()) as unknown as ContractTransactionResponse;
     const receipt = await tx.wait();
@@ -177,18 +169,14 @@ describe("RebalancerCapacityAware", function () {
   });
 
   it("should be able to restart rebalancing with new interval", async function () {
-    // Add delay before restart to avoid rate limiting
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const rebalancerAsUser = await ethers.getContractAt(
       "RebalancerCapacityAware",
       contractAddress,
       user
     );
 
-    const newInterval = 20;
+    const newInterval = 20; // Changed to 20 seconds
 
-    console.log("  Restarting with new interval.. .");
     const tx = (await rebalancerAsUser.startRebalancing(
       newInterval
     )) as unknown as ContractTransactionResponse;
@@ -201,17 +189,11 @@ describe("RebalancerCapacityAware", function () {
 
     console.log("  Restarted with", newInterval, "second interval");
 
-    // Add delay before stopping
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
     // Stop it again for cleanup
     await rebalancerAsUser.stopRebalancing();
   });
 
   it("should reject zero interval", async function () {
-    // Add delay to avoid rate limiting
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const rebalancerAsUser = await ethers.getContractAt(
       "RebalancerCapacityAware",
       contractAddress,
@@ -224,32 +206,29 @@ describe("RebalancerCapacityAware", function () {
   });
 
   it("should reject starting when already active", async function () {
-    // Add delay to avoid rate limiting
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const rebalancerAsUser = await ethers.getContractAt(
       "RebalancerCapacityAware",
       contractAddress,
       user
     );
 
+    // Add a small delay to avoid rate limiting
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     // Start
-    console.log("  Starting rebalancing...");
     const tx1 = await rebalancerAsUser.startRebalancing(15);
     await tx1.wait();
 
-    // Add delay
+    // Add another small delay
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Try to start again - should fail
-    console.log("  Attempting to start again (should fail)...");
     await expect(rebalancerAsUser.startRebalancing(20)).to.be.revertedWith(
       "already active"
     );
 
     // Cleanup - add delay before stopping
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("  Cleaning up...");
     await rebalancerAsUser.stopRebalancing();
   });
 });
