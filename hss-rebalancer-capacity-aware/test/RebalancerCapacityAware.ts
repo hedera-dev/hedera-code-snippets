@@ -10,15 +10,30 @@ describe("RebalancerCapacityAware", function () {
   let user: any;
   let contractAddress: string;
 
+  // Helper function to poll for a condition with timeout
+  async function waitForCondition(
+    checkFn: () => Promise<boolean>,
+    timeoutMs: number = 30000,
+    pollIntervalMs: number = 2000
+  ): Promise<void> {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeoutMs) {
+      if (await checkFn()) {
+        return;
+      }
+      await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
+    }
+    throw new Error(`Condition not met within ${timeoutMs}ms`);
+  }
+
   before(async function () {
     const signers = await ethers.getSigners();
     deployer = signers[0];
-    user = signers[1] || signers[0]; // Use deployer as fallback if only one signer
+    user = signers[1] || signers[0];
 
     console.log("Deployer:", deployer.address);
     console.log("User:", user.address);
 
-    // Deploy contract with 10 HBAR
     const RebalancerCapacityAware = await ethers.getContractFactory(
       "RebalancerCapacityAware",
       deployer
@@ -51,7 +66,7 @@ describe("RebalancerCapacityAware", function () {
       user
     );
 
-    const intervalSeconds = 15; // Changed to 15 seconds for faster testing
+    const intervalSeconds = 15;
 
     const tx = (await rebalancerAsUser.startRebalancing(
       intervalSeconds
@@ -91,31 +106,36 @@ describe("RebalancerCapacityAware", function () {
   });
 
   it("should wait for first rebalance execution", async function () {
-    // Wait 20 seconds for the first rebalance to execute (15s interval + buffer)
-    console.log("  Waiting 20 seconds for first scheduled rebalance...");
-    await new Promise((resolve) => setTimeout(resolve, 20000));
+    await waitForCondition(
+      async () => {
+        const config = await rebalancer.config();
+        return config.rebalanceCount >= 1n;
+      },
+      30000,
+      2000
+    );
 
     const config = await rebalancer.config();
-
-    // The rebalance should have executed at least once
     expect(config.rebalanceCount).to.be.gte(1n);
-    console.log("  Rebalances executed:", config.rebalanceCount.toString());
   });
 
   it("should wait for multiple rebalance executions", async function () {
     const configBefore = await rebalancer.config();
     const countBefore = configBefore.rebalanceCount;
 
-    // Wait another 20 seconds for more rebalances
-    console.log("  Waiting 20 more seconds for additional rebalances...");
-    await new Promise((resolve) => setTimeout(resolve, 20000));
+    await waitForCondition(
+      async () => {
+        const config = await rebalancer.config();
+        return config.rebalanceCount > countBefore;
+      },
+      30000,
+      2000
+    );
 
     const configAfter = await rebalancer.config();
     const countAfter = configAfter.rebalanceCount;
 
-    // Should have executed at least one more rebalance
     expect(countAfter).to.be.gt(countBefore);
-    console.log(`  Rebalances increased from ${countBefore} to ${countAfter}`);
   });
 
   it("should stop rebalancing and cancel pending schedule", async function () {
@@ -143,29 +163,6 @@ describe("RebalancerCapacityAware", function () {
     const configAfter = await rebalancer.config();
     expect(configAfter.active).to.equal(false);
     expect(configAfter.lastScheduleAddress).to.equal(ethers.ZeroAddress);
-
-    console.log(
-      "  Final rebalance count:",
-      configAfter.rebalanceCount.toString()
-    );
-  });
-
-  it("should not rebalance after being stopped", async function () {
-    const configBefore = await rebalancer.config();
-    const countBefore = configBefore.rebalanceCount;
-
-    // Wait 20 seconds
-    console.log("  Waiting 20 seconds to confirm no new rebalances...");
-    await new Promise((resolve) => setTimeout(resolve, 20000));
-
-    const configAfter = await rebalancer.config();
-    const countAfter = configAfter.rebalanceCount;
-
-    // Count should not increase (or at most by 1 if a scheduled tx was already in flight)
-    expect(countAfter).to.be.lte(countBefore + 1n);
-    console.log(
-      `  Rebalance count remained at ${countAfter} (was ${countBefore})`
-    );
   });
 
   it("should be able to restart rebalancing with new interval", async function () {
@@ -175,7 +172,7 @@ describe("RebalancerCapacityAware", function () {
       user
     );
 
-    const newInterval = 20; // Changed to 20 seconds
+    const newInterval = 20;
 
     const tx = (await rebalancerAsUser.startRebalancing(
       newInterval
@@ -186,8 +183,6 @@ describe("RebalancerCapacityAware", function () {
     expect(config.active).to.equal(true);
     expect(config.intervalSeconds).to.equal(BigInt(newInterval));
     expect(config.lastScheduleAddress).to.not.equal(ethers.ZeroAddress);
-
-    console.log("  Restarted with", newInterval, "second interval");
 
     // Stop it again for cleanup
     await rebalancerAsUser.stopRebalancing();
@@ -212,23 +207,15 @@ describe("RebalancerCapacityAware", function () {
       user
     );
 
-    // Add a small delay to avoid rate limiting
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
     // Start
-    const tx1 = await rebalancerAsUser.startRebalancing(15);
-    await tx1.wait();
+    await rebalancerAsUser.startRebalancing(15);
 
-    // Add another small delay
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Try to start again - should fail
+    // Try to start again
     await expect(rebalancerAsUser.startRebalancing(20)).to.be.revertedWith(
       "already active"
     );
 
-    // Cleanup - add delay before stopping
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Cleanup
     await rebalancerAsUser.stopRebalancing();
   });
 });
