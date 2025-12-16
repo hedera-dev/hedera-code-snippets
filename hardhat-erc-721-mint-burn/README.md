@@ -25,7 +25,7 @@ npx hardhat keystore set HEDERA_PRIVATE_KEY
 ```
 
 For HEDERA_RPC_URL, we'll have https://testnet.hashio.io/api
-For HEDERA_PRIVATE_KEY, enter the HEX Encoded Private Key for your ECDSA account from the [Hedera Portal](https://portal.hedera.com/).
+For HEDERA_PRIVATE_KEY, enter the HEX Encoded Private Key for your ECDSA account from the [Hedera Portal](https://hubs.ly/Q03Yhbqh0).
 
 ### 2. Install dependencies:
 

@@ -18,7 +18,7 @@ This repository demonstrates how to write, test, deploy, and verify an ERC20 sma
 ### Prerequisites
 
 - [Foundry](https://book.getfoundry.sh/getting-started/installation)
-- A Hedera testnet account and ECDSA private key ([guide](https://portal.hedera.com))
+- A Hedera testnet account and ECDSA private key ([guide](https://hubs.ly/Q03Yhbqh0))
 
 ### Install
 
