@@ -16,4 +16,4 @@ by specifying the same `fileId`.
 
 ## References
 
-- Hedera Portal: https://portal.hedera.com/register
+- [Hedera Portal](https://hubs.ly/Q03Yhbqh0)

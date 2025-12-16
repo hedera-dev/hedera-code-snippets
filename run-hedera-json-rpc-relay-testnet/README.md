@@ -47,6 +47,7 @@ You can now use `http://localhost:7546` as your JSON-RPC endpoint URL.
 Note that interacting with this is interacting with the Hedera Testnet,
 as under the hood, the server that you are running on `localhost`
 is communicating with, and translating the messages from/to JSON-RPC:
+
 - Hedera Mirror Nodes over REST APIs
 - Hedera Consensus Nodes over gRPC
 
@@ -90,5 +91,5 @@ and not Tinybars (10^-8 HBAR).
 - [`hedera-json-rpc-relay` configuration (Github)](https://github.com/hashgraph/hedera-json-rpc-relay/blob/main/docs/configuration.md)
 - [When running "hedera-json-rpc-relay", how to configure a connection to Hedera Testnet? (Stackoverflow)](https://stackoverflow.com/q/76069712/194982)
 - [How can I connect to Hedera Testnet over RPC? ​(Stackoverflow)](https://stackoverflow.com/q/76153239/194982)
-- [Hedera Portal](https://portal.hedera.com/)
+- [Hedera Portal](https://hubs.ly/Q03Yhbqh0)
 - [Latest blocks (Hashscan)](https://hashscan.io/testnet/blocks)

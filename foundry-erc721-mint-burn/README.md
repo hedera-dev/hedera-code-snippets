@@ -18,7 +18,7 @@ This repository demonstrates how to write, test, deploy, and verify an ERC721 sm
 ### Prerequisites
 
 - [Foundry](https://book.getfoundry.sh/getting-started/installation)
-- A Hedera testnet account and ECDSA private key ([guide](https://portal.hedera.com))
+- A Hedera testnet account and ECDSA private key ([guide](https://hubs.ly/Q03Yhbqh0))
 
 ### Install
 
@@ -95,7 +95,7 @@ export MY_ADDRESS=$(cast wallet address $HEDERA_PRIVATE_KEY)
 Mint 1 NFT to any address (owner must call this):
 
 ```bash
-# Make sure to update the file by replacing with 
+# Make sure to update the file by replacing with
 # your own contract address
 forge script script/MintMyToken.s.sol --rpc-url testnet --broadcast
 ```
@@ -105,7 +105,7 @@ forge script script/MintMyToken.s.sol --rpc-url testnet --broadcast
 Burn the NFT from your address (owner must call this):
 
 ```bash
-# Make sure to update the file by replacing with 
+# Make sure to update the file by replacing with
 # your own contract address
 forge script script/BurnMyToken.s.sol --rpc-url testnet --broadcast
 ```

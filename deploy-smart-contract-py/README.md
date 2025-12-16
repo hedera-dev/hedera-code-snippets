@@ -17,5 +17,5 @@ by specifying the same `fileId`.
 
 ## References
 
-- Hedera Portal: https://portal.hedera.com/register
+- [Hedera Portal](https://hubs.ly/Q03Yhbqh0)
 - Deploy Smart Contract Doc: https://hedera.com/blog/how-to-deploy-smart-contracts-on-hedera-part-1-a-simple-getter-and-setter-contract

@@ -7,15 +7,15 @@ Just like an account needs to “opt-in” to a particular token by associationg
 
 ## Code
 
-* First rename the `.env.example` file to `.env`.
-* Next update the values of `OPERATOR_ID` and `OPERATOR_KEY`. 
+- First rename the `.env.example` file to `.env`.
+- Next update the values of `OPERATOR_ID` and `OPERATOR_KEY`.
 
- > The  `OPERATOR_ID` will be the ED25519 account id and the `OPERATOR_KEY` will be the DER Encoded Private Key. You can grab this information from https://portal.hedera.com/login
-* `TokenDissociateTransaction` class is used to build the tranasction to dissociate the provided Hedera account with the provided Hedera token(s).
-* `setAccountId()` method sets the account to be dissociate with the provided tokens. Expects an `AccountId`
-* `setTokenIds()` method set the tokens to be dissociate with the provided account. Expects a `List <TokenId>`.
-* `freezeWith()` method freezes this transaction from further modification to prepare for signing or serialization.
+> The  `OPERATOR_ID` will be the ED25519 account id and the `OPERATOR_KEY` will be the DER Encoded Private Key. You can grab this information from the [Hedera Portal](https://hubs.ly/Q03Yhbqh0)
 
+- `TokenDissociateTransaction` class is used to build the tranasction to dissociate the provided Hedera account with the provided Hedera token(s).
+- `setAccountId()` method sets the account to be dissociate with the provided tokens. Expects an `AccountId`
+- `setTokenIds()` method set the tokens to be dissociate with the provided account. Expects a `List <TokenId>`.
+- `freezeWith()` method freezes this transaction from further modification to prepare for signing or serialization.
 
 ## References
 

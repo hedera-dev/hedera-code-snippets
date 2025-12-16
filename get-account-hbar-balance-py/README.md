@@ -12,5 +12,5 @@ We use `AccountBalanceQuery()` to do this, and read the `hbars` property from th
 
 ## References
 
-- Hedera Portal: https://portal.hedera.com/register
+- [Hedera Portal](https://hubs.ly/Q03Yhbqh0)
 - Hedera Docs: https://docs.hedera.com/hedera/sdks-and-apis/sdks/cryptocurrency/get-account-balance

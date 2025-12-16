@@ -12,4 +12,4 @@ Firstly, we generate new keys for the account we are going to create. We do so u
 
 ## References
 
-- Hedera Portal: https://portal.hedera.com/register
+- [Hedera Portal](https://hubs.ly/Q03Yhbqh0)
