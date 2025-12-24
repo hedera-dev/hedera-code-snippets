@@ -18,3 +18,6 @@
 
 # Hardhat coverage reports
 /coverage
+
+# Custom
+verify-bundles/

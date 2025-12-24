@@ -30,6 +30,9 @@ async function main() {
   // Get the contract balance to verify funding
   const balance = await ethers.provider.getBalance(contractAddress);
   console.log("Contract HBAR balance:", ethers.formatEther(balance), "HBAR");
+
+  console.log("📝 Save this address for the next steps!");
+  console.log(`export CONTRACT_ADDRESS=${contractAddress}`);
 }
 
 main().catch(console.error);
