@@ -6,7 +6,8 @@ async function main() {
   const [signer] = await ethers.getSigners();
   console.log("Using signer:", signer.address);
 
-  const contractAddress = "0x76CFE47809A84e62D633562c350e775e0dB7E1bF"; // Replace with your deployed contract address
+  const contractAddress =
+    process.env.CONTRACT_ADDRESS || "<your-deployed-contract-address>";
   const alarmClockContract = await ethers.getContractAt(
     "AlarmClockSimple",
     contractAddress,
